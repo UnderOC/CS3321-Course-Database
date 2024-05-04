@@ -1,13 +1,3 @@
-const MongoClient = require('mongodb').MongoClient;
-const fs = require('fs');
-
-// MongoDB URL
-const url = 'mongodb://localhost:27017';
-// 数据库名
-const dbName = 'COURSE_DB';
-
-const { ObjectId } = require('mongodb');
-
 //先在Course_Inform集合中对于关键词进行搜索
 const searchCourseInform = async (db, keyword, modules) => {
     let query = {};
@@ -184,9 +174,6 @@ const searchFilesAndFindCourse = async (db, keyword, modules) => {
         }
     }
     return results;
-
-
-
 };
 
-//module.exports = { searchCourseInform, searchFilesAndFindCourse };
+module.exports = searchCourseInform;
