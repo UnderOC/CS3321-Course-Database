@@ -1,0 +1,337 @@
+{
+    "course_name": "程序设计原理与方法",
+    "course_url": "https://oc.sjtu.edu.cn/courses/40385",
+    "course_id": "40385",
+    "modules": [
+        {
+            "module_id": "context_module_145405",
+            "module_name": "绪论",
+            "attachments": [
+                {
+                    "attachment_id": "595870",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/595870",
+                    "attachment_name": "lecture1.pptx"
+                },
+                {
+                    "attachment_id": "614286",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/614286",
+                    "attachment_name": "lecture1.zip"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_149415",
+            "module_name": "命令式编程基础 (C++入门)",
+            "attachments": [
+                {
+                    "attachment_id": "614288",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/614288",
+                    "attachment_name": "lecture2.pptx"
+                },
+                {
+                    "attachment_id": "614289",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/614289",
+                    "attachment_name": "lecture2.zip"
+                },
+                {
+                    "attachment_id": "627076",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/627076",
+                    "attachment_name": "lecture3.zip"
+                },
+                {
+                    "attachment_id": "627491",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/627491",
+                    "attachment_name": "第9章 模块化开发.ppt"
+                },
+                {
+                    "attachment_id": "629322",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/629322",
+                    "attachment_name": "3月9号课程视频"
+                },
+                {
+                    "attachment_id": "634447",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/634447",
+                    "attachment_name": "lecture3.pptx"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_156486",
+            "module_name": "抽象数据类型",
+            "attachments": [
+                {
+                    "attachment_id": "636760",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/636760",
+                    "attachment_name": "3月14号课程视频"
+                },
+                {
+                    "attachment_id": "636771",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/636771",
+                    "attachment_name": "nat.ml"
+                },
+                {
+                    "attachment_id": "640682",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/640682",
+                    "attachment_name": "3月16号课程视频"
+                },
+                {
+                    "attachment_id": "645927",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/645927",
+                    "attachment_name": "3月21号课程视频"
+                },
+                {
+                    "attachment_id": "649779",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/649779",
+                    "attachment_name": "3月23号课程视频"
+                },
+                {
+                    "attachment_id": "654115",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/654115",
+                    "attachment_name": "lecture4.pptx"
+                },
+                {
+                    "attachment_id": "654116",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/654116",
+                    "attachment_name": "lecture4.zip"
+                },
+                {
+                    "attachment_id": "654449",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/654449",
+                    "attachment_name": "3月28号课程视频"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_160437",
+            "module_name": "调试和测试",
+            "attachments": [
+                {
+                    "attachment_id": "657075",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/657075",
+                    "attachment_name": "Debugging_Testing.pptx"
+                },
+                {
+                    "attachment_id": "658213",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/658213",
+                    "attachment_name": "debug.zip"
+                },
+                {
+                    "attachment_id": "658277",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/658277",
+                    "attachment_name": "3月30日课程视频"
+                },
+                {
+                    "attachment_id": "658529",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/658529",
+                    "attachment_name": "作业3答疑+程序开发和Debug示例"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_161159",
+            "module_name": "多态抽象数据类型",
+            "attachments": [
+                {
+                    "attachment_id": "661971",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/661971",
+                    "attachment_name": "cs1604_lib.zip"
+                },
+                {
+                    "attachment_id": "662349",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/662349",
+                    "attachment_name": "4月2号课程视频"
+                },
+                {
+                    "attachment_id": "665044",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/665044",
+                    "attachment_name": "4月6号课程视频"
+                },
+                {
+                    "attachment_id": "666043",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/666043",
+                    "attachment_name": "CS1604lib在Mac上使用指南.pdf"
+                },
+                {
+                    "attachment_id": "669968",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/669968",
+                    "attachment_name": "4月11日课程视频"
+                },
+                {
+                    "attachment_id": "673957",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/673957",
+                    "attachment_name": "4月13日课程视频"
+                },
+                {
+                    "attachment_id": "678282",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/678282",
+                    "attachment_name": "4月18日课程视频"
+                },
+                {
+                    "attachment_id": "681846",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/681846",
+                    "attachment_name": "lecture5.zip"
+                },
+                {
+                    "attachment_id": "681858",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/681858",
+                    "attachment_name": "4月20日课程视频"
+                },
+                {
+                    "attachment_id": "698653",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/698653",
+                    "attachment_name": "lecture5.pptx"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_165766",
+            "module_name": "抽象数据类型设计",
+            "attachments": [
+                {
+                    "attachment_id": "688569",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/688569",
+                    "attachment_name": "4月25日课程视频"
+                },
+                {
+                    "attachment_id": "692207",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/692207",
+                    "attachment_name": "4月27日课程视频"
+                },
+                {
+                    "attachment_id": "700955",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/700955",
+                    "attachment_name": "5月9日课程视频"
+                },
+                {
+                    "attachment_id": "704069",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/704069",
+                    "attachment_name": "lecture6.pptx"
+                },
+                {
+                    "attachment_id": "704071",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/704071",
+                    "attachment_name": "lecture6.zip"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_168421",
+            "module_name": "指针和动态资源",
+            "attachments": [
+                {
+                    "attachment_id": "704067",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/704067",
+                    "attachment_name": "5月11日课程视频"
+                },
+                {
+                    "attachment_id": "708557",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/708557",
+                    "attachment_name": "5月16日课程视频"
+                },
+                {
+                    "attachment_id": "711393",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/711393",
+                    "attachment_name": "5月18日课程视频"
+                },
+                {
+                    "attachment_id": "714981",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/714981",
+                    "attachment_name": "5月23日课程视频"
+                },
+                {
+                    "attachment_id": "717544",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/717544",
+                    "attachment_name": "5月25日课程视频"
+                },
+                {
+                    "attachment_id": "720926",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/720926",
+                    "attachment_name": "lecture7.pptx"
+                },
+                {
+                    "attachment_id": "720927",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/720927",
+                    "attachment_name": "lecture7.zip"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_171487",
+            "module_name": "子类型和继承",
+            "attachments": [
+                {
+                    "attachment_id": "721160",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721160",
+                    "attachment_name": "5月30日课程视频"
+                },
+                {
+                    "attachment_id": "721680",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721680",
+                    "attachment_name": "lecture8.pptx"
+                },
+                {
+                    "attachment_id": "721681",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721681",
+                    "attachment_name": "lecture9.pptx"
+                },
+                {
+                    "attachment_id": "721684",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721684",
+                    "attachment_name": "lecture8.zip"
+                },
+                {
+                    "attachment_id": "723267",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/723267",
+                    "attachment_name": "6月1号课程视频"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_162661",
+            "module_name": "工具",
+            "attachments": [
+                {
+                    "attachment_id": "669975",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/669975",
+                    "attachment_name": "baretail.exe"
+                },
+                {
+                    "attachment_id": "671081",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/671081",
+                    "attachment_name": "4月11日晚答疑"
+                }
+            ]
+        },
+        {
+            "module_id": "context_module_163812",
+            "module_name": "作业讲解",
+            "attachments": [
+                {
+                    "attachment_id": "676350",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676350",
+                    "attachment_name": "Assignment1讲解.pptx"
+                },
+                {
+                    "attachment_id": "676462",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676462",
+                    "attachment_name": "作业1讲解+作业2答疑"
+                },
+                {
+                    "attachment_id": "676354",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676354",
+                    "attachment_name": "Assignment2讲解.pptx"
+                },
+                {
+                    "attachment_id": "676574",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676574",
+                    "attachment_name": "作业2讲解"
+                },
+                {
+                    "attachment_id": "676362",
+                    "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676362",
+                    "attachment_name": "作业3题目讲解和Debug说明"
+                }
+            ]
+        }
+    ]
+}
