@@ -1,42 +1,96 @@
-const MongoClient = require('mongodb').MongoClient;
-const fs = require('fs');
-
-// MongoDB URL
-const url = 'mongodb://localhost:27017';
-// 数据库名
-const dbName = 'COURSE_DB';
-
-const { ObjectId } = require('mongodb');
-
 //先在Course_Inform集合中对于关键词进行搜索
 const searchCourseInform = async (db, keyword, modules) => {
     let query = {};
-    let fields = { _id: 0, course_name: 1, course_url: 1, course_id: 0 }; // 保留基础信息
+    let fields = { course_name: 1, course_url: 1 }; // 保留基础信息
 
+    // 这里手动规定哪一些字段需要输出
     if (modules.includes('all')) {
         // 如果包含'all'，搜索所有内容
-        fields = { ...fields, announcements: 1, assignments: 1, files: 1, video: 1, modules: 1 };
-    } else {
+        fields = {
+          ...fields,
+            'announcements.ann_title': 1,
+            'announcements.ann_message': 1,
+            'assignments.assign_title': 1,
+            'assignments.assign_message': 1,
+            'assignments.assign_file.file_name': 1,
+            'assignments.assign_file.file_url': 1,
+            'assignments.assign_file.download_path': 1,
+            'files.file_name': 1,
+            'files.file_url': 1,
+            'video.video_description': 1,
+            'modules.modules_name': 1,
+            'modules.attachments.attachment_name': 1,
+            'modules.attachments.attachment_url': 1
+        };
+      } else {
         // 只搜索特定模块
-        modules.forEach(mod => fields[mod] = 1);
-    }
+        modules.forEach(mod => {
+          if (mod === 'announcements') {
+            fields['announcements.ann_title'] = 1;
+            fields['announcements.ann_message']= 1;
+          };
+          if (mod === 'assignments'){
+            fields['assignments.assign_title'] = 1;
+            fields['assignments.assign_message'] = 1;
+            fields['assignments.assign_file.file_name'] = 1;
+            fields['assignments.assign_file.file_url'] =1;
+            fields['assignments.assign_file.download_path'] =1;
+          };
+          if (mod === 'files'){
+            fields['files.file_name'] =1;
+            fields['files.file_url'] =1;
+          };
+          if (mod === 'video'){
+            fields['video.video_description']=1;
+          };
+          if (mod === 'modules'){
+            fields['modules.modules_name']=1;
+            fields['modules.attachments.attachment_name']=1;
+            fields['modules.attachments.attachment_url']=1;
+          };
+        });
+      }
 
-    // 基础查询用于获取所有相关的课程
-    query = { $or: [
-        { 'course_name': {$regex: keyword, $options: 'i'} },
-        { 'announcements.ann_title': { $regex: keyword, $options: 'i' } },
-        { 'announcements.ann_message': { $regex: keyword, $options: 'i' } },
-        { 'assignments.assign_title': { $regex: keyword, $options: 'i' } },
-        { 'assignments.assign_message': { $regex: keyword, $options: 'i' } },
-        { 'assignments.assign_file.file_name': { $regex: keyword, $options: 'i' } },
-        { 'files.filename': { $regex: keyword, $options: 'i' } },
-        { 'video.video_description': { $regex: keyword, $options: 'i' } },
-        { 'modules.modules_name': { $regex: keyword, $options: 'i' } },
-        { 'modules.attachments.attachment_name': { $regex: keyword, $options: 'i' } }
-    ]};
-    
+    // 顶层筛选条件
+    query = {
+      $and: [
+        {
+          $or: [
+            { 'course_name': { $regex: keyword, $options: 'i' } },
+            { 'announcements.ann_title': { $regex: keyword, $options: 'i' } },
+            { 'announcements.ann_message': { $regex: keyword, $options: 'i' } },
+            { 'assignments.assign_title': { $regex: keyword, $options: 'i' } },
+            { 'assignments.assign_message': { $regex: keyword, $options: 'i' } },
+            { 'assignments.assign_file.file_name': { $regex: keyword, $options: 'i' } },
+            { 'files.file_name': { $regex: keyword, $options: 'i' } },
+            { 'video.video_description': { $regex: keyword, $options: 'i' } },
+            { 'modules.modules_name': { $regex: keyword, $options: 'i' } },
+            { 'modules.attachments.attachment_name': { $regex: keyword, $options: 'i' } }
+          ]
+        },
+        {
+          assignments: {
+            $elemMatch: {
+              $or: [
+                { assign_title: { $regex: keyword, $options: 'i' } },
+                { assign_message: { $regex: keyword, $options: 'i' } },
+                { 'assign_file.file_name': { $regex: keyword, $options: 'i' } }
+              ]
+            }
+          }
+        }
+      ]
+    };
+  
+    const results = await db.collection('Course_Inform')
+      .find(query)
+      .project(fields)
+      .toArray();
+  
+    //const results = await db.collection('Course_Inform').find(query).project(fields).toArray();
+    //console.log('中间检索结果:', JSON.stringify(results, null, 2));
+    console.log('中间检索结果:', results);
 
-    const results = await db.collection('Course_Inform').find(query, { projection: fields }).toArray();
 
     if (results.length === 0) {
         // 如果Course_Inform中没有匹配的结果，查询Course_Files集合
@@ -57,7 +111,7 @@ const searchCourseInform = async (db, keyword, modules) => {
             course_url: doc.course_url
         };
 
-        //TODO：这里如果课程名匹配，只返回对应的课程名和url，需要后续进一步修改
+        //TODO: 这里如果课程名匹配，只返回对应的课程名和url，需要后续进一步修改
         if (doc.course_name.toLowerCase().includes(keyword.toLowerCase())) {
             return result;  
         }
@@ -112,6 +166,7 @@ const searchCourseInform = async (db, keyword, modules) => {
         //filter video
         if (doc.video) {
             const matchedVideo = doc.video.filter(video =>
+                video && video.video_description &&
                 video.video_description.toLowerCase().includes(keyword.toLowerCase())
             ).map(video => ({
                 video_description: video.video_description
@@ -123,6 +178,7 @@ const searchCourseInform = async (db, keyword, modules) => {
         //filter modules
         if (doc.modules) {
             const matchedModules = doc.modules.filter(modules =>
+                modules && modules.modules_title &&
                 modules.modules_title.toLowerCase().includes(keyword.toLowerCase()) ||
                 (modules.attachments && modules.attachments.some(attach => attach.attachment_name.toLowerCase().includes(keyword.toLowerCase())))
             ).map(modules => ({
@@ -135,7 +191,7 @@ const searchCourseInform = async (db, keyword, modules) => {
                 })) : []
             }));
 
-            results.announcements = matchedAnnouncements;
+            results.announcements = matchedModules;
         }
     });
 
@@ -184,9 +240,6 @@ const searchFilesAndFindCourse = async (db, keyword, modules) => {
         }
     }
     return results;
-
-
-
 };
 
-//module.exports = { searchCourseInform, searchFilesAndFindCourse };
+module.exports = searchCourseInform;
