@@ -1,0 +1,823 @@
+﻿I V I VII / / F
+IPADS
+INSTITUTE OF RARALLEL
+AND DISTRIBUTED SYSTEMS
+处理器调度
+上海交通大学并行与分布式系统研究所 https://ipads.se.sjtu.edu.cn
+卜版权声明
+•	本内容版权归上海交通大学并行与分布式系统研究所所有
+•	使用者可以将全部或部分本内容免费用于非商业用途
+•	使用者在使用全部或部分本内容时请注明来源
+– 资料来自上海交通大学并行与分布式系统研究所+材料名字
+•	对于不遵守此声明或者其他违法使用本内容者，将依法保留追究权
+•	本内容的发布采用Creative Commons Attribution 4.0 License
+– 完整文本：https://creativecommons.org/licenses/by/4.0/legalcode
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+2
+> 处理器调度
+3
+卜系统中的任务数远多于处理器数
+1	□ 1	1.3%]	5	[II	1.3%]
+2	CH	i.3sq	6		1.3%]
+3		1.3%]	7	[II	2.0%]
+幺	「1		8	「1 1	2.0%]
+Mem [I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I 7.13G/15.5G]Tdsks: 169; 1 rlunning Swp[l I I I I I I I I I I I I I I I I I I I I I I I I I I I	806M/2.00G] LsU 口丫口 u*. «.01 0.06 0.08
+Uptime: 7 days, 05:14:22
+I PID USER |	1 root		PRI 2。	NI 0	VIRT 220M	RES 6036	SHR S CPU% MEM%				TIME+ 0:30.34	Command	1 /sbin/init splash	[	
+						3772 S		0.0	0.0			
+31077	dongzy	20	0	5080M	288M	21232	S	0.0	1.8	1:00.45		java -server -Xms512m -Xmx512m -XX:NewRatio=3 -XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90
+30484	root	20	0	296M	10808	9368	S	0.0	0.1	0:00.03		/usr/sbin/cups-browsed
+30483	root	20	0	109M	12520	7036	S	0.0	0.1	0:00.34		/usr/sbin/cupsd -1
+30152	dongzy	-31	10	973M	162M	98684	S	0.0	1.0	0:05.66		/usr/bin/python3 /usr/bin/update-manager --no-update --no-focus-on-map
+3450	root	20	0	548M	17832	6060	S	0.0	0.1	0:24.26		/usr/1i b/fwupd/fwupd
+3259	dongzy	20	0	496M	2204	1680	S	0.0	0.0	0:00.34		/usr/lib/gnome-settings-daemon/gsd-printer
+3113	dongzy	20	0	335M	5032	3036	S	0.0	0.0	1:46.61		/usr/lib/ibus/ibus-xll --kill-daemon
+3083	dongzy	9	-11	1309M	7304	5368	S	0.0	0.0	0:01.11		/usr/bin/pulseaudio --start --log-target=syslog
+2902	dongzy	20	0	425M	4936	3756	S	0.0	0.0	0:00.83		/usr/bin/gnome-keyring-daemon --daemonize --login
+14814	dongzy	20	0	11304	632	304	S	0.0	0.0	0:00.08	1	1— /usr/bin/ssh-agent -D -a /run/user/1000/keyring/.ssh
+1580	root	20	0	438M	34448	8204	S	0.0	0.2	0:14.03	H	/usr/lib/packagekit/packagekitd
+1577	root	20	0	289M	2992	2620	S	0.0	0.0	0:00.06	H	/usr/lib/x86_64-linux-gnu/boltd
+任务(Task)：线程、单线程进程
+仅有8个处理器，如何运行169个任务？
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+4
+卜处理器调度
+对象：CPU核心上运行的最小单元，例如线程，统一用“任务”（也可表示协程/进程）描述。
+1）执行时间用尽
+2）等待I/O请求
+3）睡眠
+4）中断
+5）…
+2）执行该任务的CPU
+3）执行的时长
+上海交通大学并行与分布式系统研究所（IPADS@SJTU）
+5
+卜如果没有调度器
+CPU
+一个运行30分钟 的机器学习程序
+■>
+播放音乐
+■>
+(程序执行片段)
+程序员需要等30分钟才能播放他爱听的音乐
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+6
+卜调度器的优势
+调度器
++
+播放音乐
+一个运行30分钟 的机器学习程序
+CPU
+■>
+R
+(程序执行片段)
+调度器"人性化"地将程序切片执行 现在程序员可以边听音乐边等他的程序运行完了
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+7
+卜不同场景下的调度指标
+批处理系统	交互式系统	网络服务器
+移动设备
+实时系统
+胃 口皇口
+实时性
+高吞吐量	低响应时间	可扩展性
+低能耗
+一些共有的目标：
+高资源利用率 多任务公平性 低调度开销
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+8
+卜调度指标
+•	降低周转时间：任务第一次进入系统到执行结束的时间
+•	降低响应时间：任务第一次进入系统到第一次给用户输出的时间
+•	实时性：在任务的截止时间内完成任务
+•	公平性：每个任务都应该有机会执行，不能饿死
+•	开销低：调度器是为了优化系统，而非制造性能BUG
+•	可扩展：随着任务数量增加，仍能正常工作
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+9
+卜调度的挑战
+•	缺少信息(没有先知)
+– 工作场景动态变化
+•	任务间的复杂交互
+•	调度目标多样性
+– 不同的系统可能关注不一样的调度指标
+•	许多方面存在取舍
+– 调度开销V.S.调度效果
+– 优先级V.S.公平
+– 能耗V.S.性能
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+10
+Classical Scheduling
+> 经典调度
+11
+卜 CPU调度与提问调度
+工	口	A
+学霸	同学的问题	同学
+i	i	i
+CPU	任务	用户
+假设每个同学只提一个问题
+学霸调度问题
+i
+CPU调度任务
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+12
+卜 First Come First Served
+■■ aABC
+大家排队 先来后到！
+得嘞，我第一
+C,先来后到！
+我的问题很简单 却要等那么长时间…
+问题	到达时间	解答时间 (工作量)
+A	0	4
+B	1	7
+C	2	2
+A	BC
+先到先得：简单、直观
+问题：平均周转、响应时间过长
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+13
+Shortest (Completion Time) Job First
+问题 到达时间	解答时间
+（工作量）
+简单的问题先来
+ABC
+我最先到， 我还是第一！
+万一再来个短时间的 D，那我要等死了…
+我可以先于8了。
+A0	4
+B1	7
+C2	2
+AC	B
+短任务优先：平均周转时间短 问题：1）不公平，任务饿死 2）平均响应时间过长
+上海交通大学并行与分布式系统研究所（IPADS@SJTU）
+14
+回
+顾
+15
+卜处理器上下文vs. 线程上下文
+• 有两个“上下文”概念，如何辨析？
+– 处理器上下文：用于保存切换时的寄存器状态(硬件)
+•	在每个PCB中均有保存
+– 线程上下文：表示目前操作系统正以哪线程的身份运行(软件)
+•	使用一个指向TCB的全局指针(代码中的curr _thread)
+1	void process_ex7t_v2(-int status)
+2	{
+3	//错毁I■下文jr— curr_thread→pcb
+destroy_ctx(purr_procrycrx);	—
+5	//销毁声核栈
+6	destroy_kern_stack(curr_proc->stack);
+7	//销毁虚'拟地症空间
+8	destroy_vmspace(curr_proc->vmspace);
+9	//保存退出状态
+10	cu r r_p roc->ex-i t_st at us = status;
+11	//标记进程为退出状态
+12	cu r r_p roc-> i s_exit = TRUE;
+13	//否如内核选择卞个需要执行的进程
+schedule。；	i公
+15 }	16
+卜小思考：操作系统如何实现curr _thread
+•	内核数据
+–全局变量（单核CPU：固定位置）
+•	多核CPU
+–需要维护多个curr_thread（每个核心对应一个）
+–如何实现呢？
+17
+卜练习题
+Assume we have the following two jobs in the workload and no I/O issues are involved. Please fill in the following tables with the execution of CPU when we decide to use different schedule policies respectively. Suppose when a job arrives, it is added to the tail of a work queue. The RR policy selects the next job of the current job in the queue. The RR time-slice is 2ms. (NOTE: Time 0 means the task running during [Oms,1ms])
+Job	Arrival Time	Length of Run-time
+A	0ms	4ms
+B	2ms	2ms
+C	5ms	3ms
+D	9ms	4ms
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+18
+Schedule
+1.	Assume we are using different scheduling policies, please calculate the Average Turnaround Time, Average Response Time and fill the Job name in the below table (when the CPU runs at Time 6): (12')
+Policy	Average Turnaround Time	Average Response Time	CPU Time: 6ms
+FIFO	[1]	[5]	[9]
+SJF	[2]	[6]	[10]
+STCF	[3]	[7]	[11]
+RR	[4]	[8]	[12]
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+19
+卜 Schedule
+A
+B
+C
+D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+20
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+FIFO A	A	A	A
+AB	D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+21
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+FIFO A	A	A	A	B	B
+AB
+C
+D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+22
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+FIFO A	A	A	A	B	B	C	C	C
+AB
+C
+D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+23
+卜 Schedule
+Time( ms)	0	1	2	3	4	5	6	7	8	9	10	11	12
+FIFO	A	A	A	A	B	B	C	C	C	D	D	D	D
+AB
+C
+D
+Turnaround Time = ((4-0)+(6-2)+(9-5)+(13-9)) / 4 = 4ms
+Response Time = ((0-0)+(4-2)+(6-5)+(9-9)) / 4 = 0.75ms
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+24
+卜 Schedule
+SJF v.s. SCTJF
+preemptive!
+A
+B
+C
+D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+25
+卜 Schedule
+AB
+C
+D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+26
+卜 Schedule
+AB
+C
+D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+27
+卜 Schedule
+preemptive!
+SJF
+Time( ms)
+A
+A
+A
+C
+C
+C
+A
+10
+A
+B
+C
+D
+11
+12
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+28
+卜 Schedule
+preemptive!
+Time( ms)	0	1	2	3	4	5	6	7	8	9	10	11	12
+SJF	A	A	B	B	A	C	C	C	A	D	D	D	D
+A
+B
+C
+D
+Turnaround Time = ((9-0)+(4-2)+(8-5)+(13-9)) / 4 = 4.5ms CPU 6ms : C
+Response Time = ((0-0)+(2-2)+(5-5)+(9-9)) / 4 = 0ms
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+29
+31
+卜抢占式调度(Preemptive Scheduling)
+•	每次任务执行
+–一定时间后会被切换到下一任务 –而非执行至终止
+•	通过定时触发的时钟中断实现
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+32
+卜 Round Robin （时间片轮转）
+公平起见 每人轮流一分钟！
+感觉多等了好久…
+问题	到达时间	解答时间 （工作量）
+A	0	4
+B	1	7
+C	2	2
+AB	AB	ABABBBB
+®AAABC
+学霸的响应时间短	C	C
+了好多	I I I I I I I I I I I I I
+学霸的响应得更快了	轮询：公平、平均响应时间短
+问题：牺牲周转时间
+上海交通大学并行与分布式系统研究所（IPADS@SJTU）
+33
+卜练习题
+•	在任务具有什么特征下，RR的周转时间问题最为明显？
+每个任务的执行时间差不多相同
+(举例：10个任务，每个任务需运行1S，RR下每个任务周转时间都接近10S)
+•	时间片长短应该如何确定？
+–过长的时间片会导致什么问题？ FCFS
+–过短的时间片会导致什么问题？ 调度开销
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+34
+卜练习题
+Assume we have the following two jobs in the workload and no I/O issues are involved. Please fill in the following tables with the execution of CPU when we decide to use different schedule policies respectively. Suppose when a job arrives, it is added to the tail of a work queue. The RR policy selects the next job of the current job in the queue. The RR time-slice is 2ms. (NOTE: Time 0 means the task running during [Oms,1ms])
+Job	Arrival Time	Length of Run-time
+A	0ms	4ms
+B	2ms	2ms
+C	5ms	3ms
+D	9ms	4ms
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+35
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+RR	A	A
+AB	D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+36
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+RR	A	A	B	B
+AB	D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+37
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+RR	A	A	B	B	A	A
+AB	D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+38
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+RR	A	A	B	B	A	A	C	C
+AB	D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+39
+卜 Schedule
+Time( 0	1	2	3	4	5	6	7	8	9	10	11	12
+ms)
+RR	A	A	B	B	A	A	C	C	C
+AB	D
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+40
+卜 Schedule
+Time( ms)	0	1	2	3	4	5	6	7	8	9	10	11	12
+RR	A	A	B	B	A	A	C	C	C	D	D	D	D
+AB
+C
+D
+Turnaround Time = ((6-0)+(4-2)+(9-5)+(13-9)) / 4 = 4ms CPU 6ms : C
+Response Time = ((0-0)+(2-2)+(6-5)+(9-9)) / 4 = 0.25ms
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+41
+卜 Schedule
+if RR movement > accept new job
+Time( ms)	0	1	2	3	4	5	6	7	8	9	10	11	12
+RR	A	A	A	A	B	B	C	C	C	D	D	D	D
+AB
+C
+D
+Turnaround Time = ((4-0)+(6-2)+(9-5)+(13-9)) / 4 = 4ms CPU 6ms : C
+Response Time = ((0-0)+(4-2)+(6-5)+(9-9)) / 4 = 0.75ms
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+42
+Priority Scheduling
+> 优先级调度
+43
+卜调度优先级
+•	操作系统中的任务是不同的，例如：
+– 系统V.S.用户、前台V.S.后台、…
+•	如果不加以区分
+– 系统关键任务无法及时处理
+–	"后台运算"导致"视频播放"卡顿
+•	优先级用于确保重要的任务被优先调度
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+44
+卜添加条件：优先级
+女生优先级高！
+^ a
+ABCD
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+45
+卜多级队列
+Multi-Level Queue (MLQ)
+1）维护多个队列，每个队列设置不同优先级
+2）高优先级队列中的任务优先执行
+3）同优先级内使用Round Robin调度（也可使用其他调度策略）
+女生队列（高优先级）Qgirl
+男生队列（低优先级）Qboy
+BD
+上海交通大学并行与分布式系统研究所（IPADS@SJTU）
+46
+卜添加条件：阅读OS书（类比I/O操作）
+•	学霸告诉同学需要看OS书
+–（学霸只有一本OS书，同一时间只有一个同学能够阅读）
+•	阅读完OS书后，同学再和学霸确认知识点
+CPU
+I/O ,
+AB
+A
+AB 1—1	|-|
+B
+AB
+上海交通大学并行与分布式系统研究所（IPADS@SJTU）
+47
+卜 问题：低资源利用率
+问题：
+多种资源（学霸和OS书） 没有同时利用起来
+
+优先级0（高）	B	D
+优先级1（低）
+BDBDBDAC	A	C
+I I I I I I I I I资源空闲 l_l资源空闲 l_l
+AC 资源空闲	I	I____I
+上海交通大学并行与分布式系统研究所（IPADS@SJTU）
+48
+卜思考：优先级的选取
+•	什么样的任务应该有高优先级？
+– I/O密集型任务
+•	为了更高的资源利用率
+–用户主动设置的重要任务
+–接近DDL的任务(必须在短时间内完成)
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+49
+卜 练习题：以下经典调度策略是否属于优先级调度？
+•	First Come First Served
+•	Shortest Job First
+•	Round Robin
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+50
+卜优先级的动态调整
+•	操作系统中的工作场景是动态变化的
+•	静态设置的优先级可能导致
+– 资源利用率低
+•	一个CPU密集型动态转变为I/O密集型任务
+– 优先级反转
+• 某些场景下，任务的优先级需要动态调整
+51
+卜静态优先级的问题：低优先级任务饥饿
+任务］□
+高优先级运行队列
+
+□
+低优先级运行队列
+被高优先级任务阻塞，长时间无法执行
+52
+思考：设计满足以下要求的优先级调度策略
+•	是否可以设计一种调度策略，既可以让短任务优先执行，又不 会让长任务产生饥饿？
+-优先级=啜迎
+』Run
+-如果两个任务等待时间(Twaiting )相同，则运行时间越短越优先
+– 如果两个任务运行时间相同，则等待时间越长，越优先
+– 结合FCFS策略和SJF策略，避免了SJF策略在公平性方面的问题
+53
+> MLFQ：多级反馈队列
+54
+卜 目前介绍的调度策略的限制
+•	周转时间、响应时间过长
+– FCFS
+•	依赖对于任务的先验知识
+– 预知任务执行时间
+•	SJF
+– 预知任务是否为I/O密集型任务
+•	MLQ（用于设置任务优先级）
+– 适用于静态调度场景（预先知道任务情况）
+55
+卜多级反馈队列
+•	Multi-Level Feedback Queue (MLFQ)
+•	Corbato
+– 于1962年，发表了Compatible Time-Sharing System (CTSS)的相关论文
+•	在该论文中提出了MLFQ等方法
+– 于1990年，获得图灵奖
+•	因CTSS和Multics方面的贡献
+56
+卜 MLFQ的主要目标与思路
+•	一个无需先验知识的通用调度策略
+– 周转时间低、响应时间低
+– 调度开销低
+•	通过动态分析任务运行历史，总结任务特征
+– 类似思想的体现：页替换策略、预取
+– 需要注意：如果任务特征变化频繁，效果也不一定理想
+57
+卜基本算法（基于Multi-Level Queue）
+•	规则1:
+– 优先级高的任务会抢占优先级低的任务
+•	规则2:
+– 每个任务会被分配时间片，优先级相同的两个任务使用时间片轮转
+58
+卜如何设置任务优先级？
+•	针对混合工作场景
+– 执行时间短的任务
+•	交互式任务
+•	I/O密集型任务
+– 执行时间长的任务
+•	CPU密集型计算任务
+规则3:
+– 任务被创建时，假设该任务是短任务，为它分配最 高优先级
+规则4a:
+– 一个任务时间片耗尽后，它的优先级会被降低一级
+规则4b:
+– 如果一个任务在时间片耗尽让出CPU，那么它的优 先级不变
+•	（通常，交互式任务/IO密集型任务符合该特点）
+– 任务重新执行时，会被分配新的时间片
+59
+卜样例执行1、2
+对于长任务（红色任务）：
+•	MLFQ会逐渐降低它的优先级
+•	并将它视为长任务
+对于短任务（蓝色任务）：
+• 它会很快执行完
+蓝色任务 红色任务
+Q3 ■
+Q2 ■
+Q1 |	^^^B
+*Q3优先级最高
+1	.一个长任务的执行
+Q3
+Q2
+Q1
+2.长任务执行时，一个短任务被创建
+60
+卜样例执行3
+蓝色任务 红色任务
+Q3
+Q2
+Q1
+对于I/O密集型任务：
+•	它会在时间片执行完以前放弃CPU
+•	MLFQ保持它的优先级不变即可
+3	.混合CPU密集型（红色任务）与 I/O密集型任务（蓝色任务）的执行
+61
+卜基本算法的问题（一）
+•	长任务饥饿
+– 过多的短任务、I/O密集型任务可能占用所有CPU时间
+•	任务特征可能动态变化
+–	CPU密集型任务→交互式任务，…
+62
+卜定时优先级提升
+规则5:
+思考：为什么要提升全部的优先级？
+–	在某个时间段S后，将系统中所有任务优先级升为最高
+•	效果1：避免长任务饿死
+– 所有任务的优先级会定时地提升最高
+– 最高级队列采用RR，长任务一定会被调度到
+•	效果2：针对任务特征动态变化的场景
+–	MLFQ会定时地重新审视每个任务
+63
+卜样例执行4
+Q3■ Illi
+Q2
+Q1
+长任务饥饿
+优先级提升 提升 提升
+Q3	1 I ■	■llll■llll
+Q2	I ; ■	1	1 1	1
+Q1	1	1	1 1	1
+4.采用定时优先级提升的前后对比（左为采用前，右为采用后）
+64
+卜基本算法的问题（二）
+•	无法应对抢占CPU时间的攻击
+– 恶意任务在时间片用完前发起I/O请求
+•	避免MLFQ将该任务的优先级降低
+•	并且每次重新执行时间片会被重置
+•	几乎独占CPU！
+65
+卜攻击示例
+更准确地记录执行时间
+•规！则4:
+– 一个任务时间片耗尽后（无论它期间放弃了多次CPU，它的时间片不会被 重置），它的优先级会被降低一级
+• 更新策略
+– 记录每个任务在当前优先级使用的时间片
+– 当累计一个完整时间片被用完后，降低其优先级
+67
+卜样例执行5
+5.使用准确记录执行时间的前后对比（左为采用前，右为采用后）
+卜 MLFQ的参数调试
+•	如何确定MLFQ的各种参数？
+– 优先级队列的数量
+– 不同队列的时间片长短
+– 定时优先级提升的时间间隔
+•	每个参数都体现了MLFQ的权衡
+– 对于不同的工作场景，不同的参数会导致不一样的表现
+70
+卜	MLFQ各个队列时间片长短的选择
+•	为不同队列选择不同的时间片
+– 高优先级队列时间片较短，针对短任务
+•	降低响应时间
+– 低优先级队列时间片较长，针对长任务
+•	降低调度开销
+71
+卜多级反馈队列总结
+•	Multi-Level Feedback Queue
+–通过观察任务的历史执行，动态确定任务优先级
+•	无需任务的先验知识
+–同时达到了周转时间和响应时间两方面的要求
+•	对于短任务，周转时间指标近似于SJF
+•	对于交互式任务，响应时间指标近似于RR
+–可以避免长任务的饿死
+• 许多著名系统的调度器是基于MLFQ实现的
+– BSD, Solaris, Windows NT 和后续Windows操作系统
+72
+Fair-Share Scheduling
+> 公平共享调度
+73
+卜场景：共享服务器
+A和B两位同学合资买了一台服务器，他们每人负担了一半的费用
+两人应均分CPU时间
+– 而非被发起的任务数量决定
+如果CPU使用时间片轮转调度
+– A占用80%CPU时间
+– B占用20%CPU时间
+实例：容器CPU cgroup
+B发起1个任务
+A发起4个任务
+74
+卜公平共享
+•	每个用户占用的资源是成比例的
+–而非被任务的数量决定
+•	每个用户占用的资源是可以被计算的
+–设定“份额"以确定相对比例
+–例：份额为4的用户使用资源，是份额为2的用户的2倍
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+75
+卜添加条件：一个同学会问多个问题
+A1 )-	A
+A2
+B1	B
+学霸66.6%时间都 会回答我的问题
+我们应A该耍平赖分！学霸！
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+76
+方法：使用“ticket”表示任务的份额
+•	ticket：每个问题对应的份额
+•	T : ticket的总量
+•	问题A1可占用学霸时间的比例
+ticket^]	20	1
+--------=..=-
+T	100	5
+•	同学A可占用学霸时间的比例
+A
+50
+20
+30
+A1
+A2
+ticket^ — ticketAi+ticketA2 _ 50 _ 1
+T -	T	- 100 — 2
+B 50
+50
+B1
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+77
+一种公平共享的实现：彩票调度
+(Lottery Scheduling)
+•每次调度时，生成随机数Re OT)
+• 根据R，找到对应的任务
+-R=51 3 调度C
+51
+20	30	50
+R = random(0, T) sum = 0 foreach(task in task_list) { sum += task.ticket if (R < sum) { break
+schedule( )|
+AB	C
+78
+Lottery Scheduling: Flexible Proportional-Share Resource Management. https://www.usenix.org/legacy/publications/library/proceedings/osdi/full_papers/waldspurger.pdf
+卜思考：份额与优先级的异同?
+•	份额影响任务对CPU的占用比例
+–不会有任务饿死
+•	优先级影响任务对CPU的使用顺序 –可能产生饿死
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+79
+卜思考：随机的利弊
+•	随机的好处是？
+–简单
+•	随机带来的问题是？
+–不精确——伪随机非真随机
+–各个任务对CPU时间的占比会有误差
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+80
+步幅调度(Stride Scheduling)
+•	确定性版本的Lottery Scheduling
+– 可以沿用tickets的概念
+•	Stride——步幅，任务一次执行增加的虚拟时间
+一 stride =
+MaxStride
+ticket
+• MaxStride是一个足够大的整数
+• 本例中设为所有tickets的最小公倍数
+•	Pass——累计执行的虚拟时间
+	Ticket	Stride
+A1	30	10
+A2	50	6
+B1	60	5
+MaxStride = 300
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+81
+步幅调度(Stride Scheduling)
+调度次序：1-14
+A
+13
+10
+8
+5
+2
+B
+14
+12
+9
+7
+4
+1
+/* select client with minimum pass value */ task 二 remove_queue_min(q);
+/* use resource for quantum */ schedule(task);
+/* compute next pass using stride */ task->pass += task->stride;
+insert_queue(q, current);
+挑选pass最小的任务优先执行
+	Ticket	Stride
+A	30	10
+B	50	6
+C	60	5
+C
+82
+卜公平共享调度
+Lottery Scheduling
+Stride Scheduling
+调度决策生成 任务实际执行时间 与预期的差距
+随机
+大
+确定性计算
+小
+预期——根据任务份额ticket计算的执行时间期望
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+83
+Multicore Scheduling Policy
+> 多核调度策略
+84
+卜多核调度需要考虑的额外因素
+•	一个进程的不同线程可以在不同CPU核心上同时运行
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+85
+卜全局运行队列
+•
+• 所有CPU核心竞争全局调度器
+•	同一个线程可能在不同CPU上切换
+– 切换开销大：Cache、TLB、…
+– 缓存局部性差
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+86
+卜每个CPU核心维护本地运行队列
+87
+卜亲和性（Affinity）
+•	程序员如何控制自己程序的行为？
+– 例如，他希望某个线程独占一个CPU核心
+•	通过操作系统暴露的任务亲和性接口，可以指定任务能够使用的CPU核心
+I 1 #include <sched.h>
+2
+3	int sched_setaffinity(pid_t pid, size_t cpusetsize,
+4	const cpu_set_t *mask);
+int sched_getaffinity(pid_t pid, size_t cpusetsize,
+6	cpu_set_t *mask);
+指定目标CPU集合的bitmask
+88
+卜思考：指定线程在CPU上执行的问题
+• 负载不均衡
+任务 任务 任务
+任务
+CPU核心
+CPU核心
+CPU核心
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+89
+卜负载均衡(Load Balance)
+•	需要追踪CPU的负载情况
+•	将任务从负载高的CPU迁移到负载低的CPU
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+90
+卜思考：如何定义任务的负载？
+•	根据任务负载定义的不同，负载均衡的效果也不尽相同
+•	请思考如下任务负载定义的优劣：
+–每个CPU核心本地运行队列的长度
+•	优势：实现简单
+•	劣势：不能准确反应当前CPU的负载情况
+–每个任务单位时间内使用的CPU资源
+•	优势：直观反映当前CPU的负载情况
+•	劣势：引入额外负载追踪开销
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+91
+卜调度小结
+•	调度指标
+•	调度策略
+– FCFS、SJF、RR
+–优先级调度、MLFQ –公平共享调度
+•	多核调度
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+92

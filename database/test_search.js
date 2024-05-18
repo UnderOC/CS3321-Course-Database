@@ -1,13 +1,13 @@
 // 测试search函数的有效性
 const { MongoClient } = require('mongodb');
-const searchCourseInform = require('./search_function');
+const searchAllCourse = require('./search_function');
 
 // MongoDB URI 和数据库名称
 const uri = 'mongodb://localhost:27017';
 const dbName = 'COURSE_DB';
 
 // 测试函数
-const testSearchCourseInform = async () => {
+const testsearchAllCourse = async () => {
   const client = new MongoClient(uri);
 
   try {
@@ -18,15 +18,16 @@ const testSearchCourseInform = async () => {
     const db = client.db(dbName);
 
     // 定义测试输入
-    const keyword = '期末考试';
-    const modules = ['assignments'];
+    const keyword = '大学物理';
+    const modules = ['all'];
     console.log('关键词:', keyword);
     console.log('约束条件:', modules);
     // 执行搜索
-    const results = await searchCourseInform(db, keyword, modules);
+    const results = await searchAllCourse(db, keyword, modules);
 
     // 输出结果
-    console.log('检索结果:', results);
+    //console.log('检索结果:', results);
+    //console.log('检索结果:', JSON.stringify(results, null, 2));
   } catch (err) {
     console.error('出现错误:', err);
   } finally {
@@ -36,4 +37,4 @@ const testSearchCourseInform = async () => {
 };
 
 // 运行测试
-testSearchCourseInform();
+testsearchAllCourse();

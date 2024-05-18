@@ -1,0 +1,838 @@
+﻿I V I VII / / F
+IPADS
+INSTITUTE OF RARALLEL
+AND DISTRIBUTED SYSTEMS
+ARM汇编–函数调用
+上海交通大学
+https://www.sjtu.edu.cn
+卜版权声明
+•	本内容版权归上海交通大学并行与分布式系统研究所所有
+•	使用者可以将全部或部分本内容免费用于非商业用途
+•	使用者在使用全部或部分本内容时请注明来源
+– 内容来自：上海交通大学并行与分布式系统研究所+材料名字
+•	对于不遵守此声明或者其他违法使用本内容者，将依法保留追究权
+•	本内容的发布采用Creative Commons Attribution 4.0 License
+– 完整文本：https://creativecommons.org/licenses/by/4.0/legalcode
+2
+> 函数调用
+3
+函数调用vs.无条件控制流跳转
+• 函数调用是另一种形式的无条件跳转
+-相同点:控制流在两段代码间的转移
+-函数调用的特别之处：
+•	函数在调用后会返回
+•	函数调用涉及参数与返回值的传递
+•	函数存在局部变量
+main()
+&
+g(x)
+f(y)
+J> g(z)
+• 函数调用需要保存某些寄存器（保证返回后能够继续执行）
+4
+基本概念
+• 术语
+– Caller 调用者
+– Callee被调用者
+、调用1
+g()
+调用2	h()
+• 调用1	• 调用2
+– 调用者: f	– 调用者: g
+– 被调用者: g	– 被调用者: h
+5
+函数调用与返回指令
+1 Int square(-int n)	1 square：	
+■l	2	mul	w0, w0. w0	
+}	 ，	3	[ret	
+5	4 cube:	
+int cube(int n)	5	stp	x29, x30,	[sp, -32]!
+{	厂	6	mov	x29. sd	
+8	return n * [square(n);]	7	str	xl% [sp,	16]
+'	8	mov	w!9, w0	
+9	[bl	square	
+mul	w0, w0, wl	
+11	tdr	xl9, [sp,	16]
+12	tdp	x29, x30,	[sp], 32
+13	ret	
+6
+函数调用指令（caller调用callee）
+• 指令
+-bl	label	（直接调用，调用函数）
+-blr	Rn	（间接调用，调用函数指针）
+• 功能
+–将返回地址存储在链接寄存器LR （x30寄存器的别名）
+–跳转到被调用者的入口地址
+7
+函数返回指令（callee返回caller）
+• 指令
+-ret	（不区分直接调用与间接调用）
+• 功能
+–跳转到返回地址（链接寄存器LR，Link Register）
+8
+卜示例：PC与LR的变化
+1	1 i int squareCint n) {	।					i 0000000000000000 <square>： | —►©: 00 7c 60 lb	mul i	4: c0 03 5f d6	ret		W0,	w6, w0 ।	
+• }		return n * n;	1							
+	int	cubeCint return n	n) { * square(n);		। 0000000000000008 1 一 18: fa ff ff | —#lc: 00 7c 13 i	・・•	<cube>： 97 bl lb mul	0X0 w%	<square> w0, wl9	
+调用前	调用后	返回后
+9
+卜嵌套函数调用
+•	cube调用square
+– cube中的bl指令将返回地址保存在LR中
+– square中的ret指令返回到LR记录的地址
+•	cube调用square，square调用foo
+– LR首先存储了square返回cube的地址
+–嵌套调用时发生覆盖：LR存储foo返回square的地址
+Q：在嵌套函数调用过程中，LR寄存器只有一个，如何存放多个返回地址呢？
+10
+卜 函数栈桢(Stack Frame)
+• 栈桢：每个函数在运行期间使用的一段内存
+–生命周期：从被调用到返回前
+–作用：存放其局部状态
+•	存放返回地址
+•	存放上一个栈桢的位置
+•	存放局部变量
+11
+卜 函数栈桢
+• 嵌套函数调用
+–例如，A调用B、B调用C
+–程序执行中存在多个未返回的函数
+–函数栈桢按照调用顺序排列
+•	先被调用者后返回
+•	栈：后进先出
+• CPU中的另一个特殊寄存器SP
+–指向栈顶（低地址）
+栈底 高地址
+栈
+低地址
+SP寄存器J—►栈顶
+函数A 栈桢
+函数B 栈桢
+函数C 栈桢
+12
+函数调用返
+回
+过程中栈的变化
+,实例：嵌套函数调用
+oooooooooooooooo <foo>：	1 void foo(int n) 0:	52800001	mov	wl,	#0x0 4:	14000003	b 10 <foo+0x!0>	2	{ 8:	d50320If	nop	3	int	i； c:	11000421	add	K，"1，#°xi	&	for	(i = 0; i < n: ++i) { 10:	6b00003f	cmp	wl ,	wO 14: 54f fff ab b. It 8 <foo+0x8>	// b. tstop	5	asm volatile ("nop )； 18:	d65f。3co	ret	6	}	
+7	
+000000000000001c <square >:	8 1c： a9be7bfd stp x29, x30, [sp, #-32]!	9 int square(int n) 20:	910003fd mov x29, sp	r 24:	f 9000bf 3	str	xl9 ,	[sp,	#16]	】° 28:	2a0003f3	mov	wl9,	wO	11	foo(n)； 2c：	94000000	bl 0 <f00>	12	return n *	n; 30:	lbl37e60 mul wO, wl9, wl9	i3 } 34:	f 9400bf 3	Idr	xl9 ,	[sp ,	#16] 38:	a8c27bf d	Idp	x29 ,	x30 ,	[sp] , #32	14 3c ： d65£03c0 ret	15 int cube(int n)	
+16 t	
+17	return 0000000000000040 <cube>:	1 40: a9be7bf d stp x29 , x30 , [sp , #-32]!	n * square(n);
+44: 910003fd mov x29, sp 48:	f 9000bf 3 str xl9 , [sp, #16] 4c: 2a0003f3 mov wl9, wO 50:	94000000 bl 1c < square > 54:	lbl37c00 mul wO, wO , wl9 58:	f9400bf 3 Idr xl9 , [sp, #16] 5c: a8c27bf d Idp x29 , x30 , [sp] , #32 60: d65fo3co ret	
+卜实例：嵌套函数调用
+0000000000000000	< foo >:
+0: 52800001	mov wl , #0 xO
+4: 14000003	b 10 <f oo + Ox10 >
+8: d503201f	nop
+c: 11000421	add. wl , wl , #0x1
+10: 6b00003f	cmp wl , wO
+14: 54ffffab	b . It 8 <foo+0x8>	// b.tstop
+18: d65f03c0	ret
+注意-1：x30就是LR寄存器
+000000000000001c	<square	>:
+1c: a9be了btd「	stp x29 ,	x30 , Lsp , #-32J !
+20: 910003fdJ	mov XN9 ,	
+24: f9000bf3	str x19 ,	[sp , #16]
+28: 2a0003f3	mov wl9,	wO
+2c: 94000000	bl 0 <foo >	
+30: lbl37e60	mul wO,	wl9, wl9
+34: f9400bf3	Idr xl9 ,	[sp , #16]
+38: a8c27bfdQ	ldp x29 ,	x30 , [	, #32	]
+3c: d65fo3co	ret	
+0000000000000040 <cube >:
+40 :	a9be7bf汇	stp	x29 ,	x30 ,	Lsp ,	#-32J !	_J
+44:	910003fd	mov	x29 ,	SP			
+48 :	f9000bf3	str	xl9 ,	[sp ,	#16]		
+4c :	2a0003f3	mov	wl9 ,	wO			
+50:	94000000	bl	1c <square		>		
+54:	lbl37c00	mul	wO ,	wO , wl9			
+58:	f9400bf3	Idr	xl9 ,	[sp ,	#16]		
+5c :	a8c27bfd^	ldp	x29 ,	x30 ,	[sp]	,#32	
+60 :	d65f03c0	ret					
+卜访存指令
+Rs指寄存器的大小（字节数）
+mem[a : b] 指地址a 到地址b 的内存范围
+指令	效果	描述
+ldr R,addr	R ← mem[addr : addr+R]	从内存加载数据到寄存器
+str R,addr	mem[addr : addr+Rs]	← R	把寄存器中数据写到内存
+指令	效果
+ldp R1,	R2, addr	R1,R2 ← mem[addr : addr+R1s+R2s]
+stp R1,	R2, addr	mem[addr : addr+R1s+R2s]	← R1,R2
+16
+卜实例：嵌套函数调用
+0000000000000000	<foo >:
+0: 52800001	mov wl , #0 xO
+4: 14000003	b 10 <f oo + Ox10 >
+8: d503201f	nop
+c: 11000421	add wl, wl, #0x1
+10: 6b00003f	cmp wl , wO
+14: 54ffffab	b . It 8 <foo+0x8>	// b.tstop
+18: d65f03c0	ret
+000000000000001c <square >
+1 c :	a9be7bfd「	stp	x29 .	,x30 .	,Lsp , #-32」！
+20:	910003fdL	mov		,sp	
+24:	f9000bf3	str	xl9	,[sp .	,#16]
+28:	2a0003f3	mov	wl9 :	,wO	
+2c :	94000000	bl ।	0 <foo >		
+30:	lbl37e60	mul	wO ,	wl9 ,	wl9
+34:	f9400bf3	Idr	xl9	,[sp .	> #16]
+38:	a8c27bf dQ	ldp	x29	,x30 .	,Lsp], #32	|
+3c :	d65fo3co	ret			
+注意-1：x30就是LR寄存器
+注意-2：同时保存了x29
+0000000000000040 <cube>
+40 :	a9be7bfdL	stp	x29 ,	x30 ,	Lsp ,	#-32j!	_J
+44:	910003fd	mov	x29 ,	sp			
+48 :	f9000bf3	str	xl9 ,	[sp ,	#16]		
+4c :	2a0003f3	mov	wl9 ,	wO			
+50:	94000000	bl	1c <square		>		
+54:	lbl37c00	mul	wO ,	wO , wl9			
+58:	f9400bf3	Idr	xl9 ,	[sp ,	#16]		
+5c :	a8c27bf汇	ldp	x29 ,	x30 ,	[sp]	,#32	Zl
+60 :	d65to3co	ret					
+栈底 高地址
+FP’’’	/	o n55 /r~c”	
+		SP /FP
+FP’’		GID'/匚 O'
+		SP/FP
+FP’	◄—	SP/FP
+栈
+低地址 栈顶
+卜帧指针FP：x29寄存器
+• 栈桢回溯
+– 栈桢大小不一
+– 如何找到上一个栈桢（如调试）
+•	保存x29（上一个栈桢的SP）
+•	将当前SP写入x29（让callee能保存）
+I—I
+2
+3
+p s rL
+0 p
+3 p s 0 X s [ w ,,,, 9 9 9 9 2 2 11 X X X w
+cube: stp mov str mov
+4 5 6
+2
+3
+u ]p
+6 s 9 1 L 1
+w ，， p 0 ，s 3 e 0 [ X r w a 5 5 u ，9 9 qo 1 2 s w X X
+IL r pt 1 u d d e b m 1 1 r
+7 8 9 0 1
+1 1
+2 3
+1 1
+18
+卜 函数的调用、返回与栈
+cube的caller执行	cube执行
+SP/FP
+0000000000000040 <cube>
+40:	a9be7bfd	stp	x29	,x30 , [sp ,	#-32]
+44:	910003fd	mov	x29	,sp	
+48:	f9000bf3	str	xl9	,[sp, #16]	
+4c :	2a0003f3	mov	wl9	,wO	
+50 :	94000000	bl	1c <	square〉	
+54:	lbl37c00	mul	wO ,	wO, wl9	
+58 :	f9400bf3	Idr	xl9	,[sp, #16]	
+5c :	a8c27bfd	Idp	x29	,x30 , [sp];	,#32
+60 :	d65fo3co	ret			
+19
+函数的调用、返回与栈
+cube的caller执行	cube执行
+square执行
+20
+卜 函数的调用、返回与栈
+cube的caller执行	cube执行
+square执行
+foo执行	无需栈桢
+0000000000000000 <foo>
+0:	52800001	mov	wl ,	,#0x0
+4:	14000003	b 10	<foo + OxlO >	
+8:	d503201f	nop		
+C :	11000421	add	wl :	,wl, #0x1
+10:	6b00003f	cmp	wl ,	,wO
+14:	54ffffab	b・It	8	<foo+0x8>	// b.tstop
+18:	d65f。3co	ret		
+21
+卜 Q：ROP攻击如何实现？
+foo执行	无需栈桢
+cube的caller执行	cube执行
+square执行
+22
+> 函数参数与返回值
+23
+卜通过寄存器传递数据
+•	调用者使用x0 ~ x7寄存器传递前8个参数
+•	被调用者使用x0寄存器传递返回值
+24
+回
+顾：参数与寄存器的对应关系
+int arith(long x, long y, long z) {
+long	t1	=	x ^	y;
+long	t2	=	z *	48;
+long	t3	=	t1	&	0x0F0F0F0F;
+long	t4	=	t2	- t3;
+return t4;
+}
+eor	x0,	x0, x1	# t1 =	x ^ y
+add	x2,	x2,	x2, lsl #1	# z =	z *	3
+lsl	x2,	x2,	4	# t2 =	z *	16
+mov	w1, #0xF0F0F0F	# tmp	= 0x0F0F0F0F
+and	x0,	x0, x1	# t3 =	t1 & const
+sub	w0,	w2, w0	# t4 =	t2 – t3
+ret		# return t4	
+初始时x0、x1、x2分别对应x、y、z
+25
+实例：通过寄存器传递参数与返回值
+w% w0, w0
+,[sp, -32]!
+,16]
+wl9
+,16]
+,[sp], 32
+0 p P0 3 p s 0 ‘S3 XSLWe0[x
+9 9 9 9 u ,9 9
+2 2 11 qe L 2 xxxwswxx
+int square(int n)	1	square
+{	2	mul
+return n * n; }	3	ret
+	4	cube:
+int cube(int n)	5	stp
+{	6	mov
+return n * square(n);	7	str
+	8	mov
+	9	bl
+	10	mul
+square和cube函数均是：	11	tdr
+	12	tdp
+1.参数n在w0中	13	ret
+2.计算结果写入w0返回		
+26
+传递数据
+• 调用者压到栈上的数据
+–第8个之后的参数
+–按声明顺序从右到左
+–所有数据对齐到8字节
+•被调用者通过SP+偏移量访问
+27
+卜传递数据：参数
+void proc(	long	a1,	long	*a1p, int	a2,	int	*a2p, short	a3,	short	*a3p, char	a4,	char	*a4p, char	a5,	char	*a5p)	{
+*a1p *a2p *a3p *a4p *a5p	+=	a1	; +=	a2	; +=	a3	; +=	a4	; +=	a5	;
+}
+void caller(long *n)	{
+proc(1, 0x2000,	3,	0x4000,
+5,	0x6000,	7,	0x8000,	9,	0xA000);
+}
+28
+传递数据：参数
+0000000000000048 <caller>:							
+48:	dl0083ff	sub	sp,	sp, #0x20			
+4c:	a9017bfd	stp	x29,	x30, [sp,	#16]		
+50:	910043fd	add	x29.	SD, #0x10			
+54:	d2940000	厂mov	X0,	#0xa000		//	#40960
+58:	f90007e0	str	X0,	[冲，#8]			
+5c:	52800120	mov	W0,	#0x9		//	#9
+60:	390003e0	istrb	W0,	[sp]			
+64:	d2900007		x7,	#0x8000 '		//	#32768
+68:	528000e6	[mov	w6,	#0x7		//	#7
+6c:	d28c0005	mov	x5,	#0x6000		//	#24576
+70:	528000a4	mov	w4,	#0x5		//	#5
+74:	J2880003	mov	x3,	#0x4000		//	#16384
+78:	52800062	mov	w2,	#0x3		//	#3
+7c:	d2840001	mov	xl,	#0x2000		//	#8192
+80:	d2800020	\mov	X0,	#0x1	J		//	#1
+84:	94000000	bL	0 vproo				
+88：	a9417bfd	Idp	x29,	x30, [sp,	#16]		
+8c:	910083ff	add	sp,	sp, #0x20			
+90:	d65f03c0	ret					
+29
+> 寄存器保存
+30
+卜通用寄存器保存
+•	嵌套函数共享同一批通用寄存器
+– 因此能够通过寄存器传递参数和返回值
+– 不同的函数对通用寄存器的使用会存在冲突—无覆盖
+•	避免冲突的思路
+– 函数在使用某个寄存器之前保存该寄存器，返回前恢复它
+– 保存在哪：函数栈桢中
+– 效率问题：存在实际无需保存的情况，因此不用每次都保存
+•	例如，函数不再调用其它函数
+•	例如，函数A在调用函数B之前使用x9，但其实之后A不再需要
+31
+卜 31个通用寄存器
+63	31	0
+X0	W0
+X1	W1
+X7	W7
+X8	W8
+X9	W9
+X15	W15	1
+X16	W16	1
+X17	W17
+X18	W18
+X19	W19
+…	
+X28	W28
+X29	W29
+X30	W30
+32
+卜 31个通用寄存器
+X17	W17
+X18	W18
+X19	W19
+X28	W28
+X29	W29	帧指针（FP）
+X30	W30	链接指针（LR）
+33
+卜 31个通用寄存器
+约定：x9-x15调用者保存；x19-x28被调用者保存
+X17	W17	平台相关寄存器
+X18	W18	
+X19	W19	
+	…	被调用者保存
+X28	W28	
+X29	W29	帧指针（FP）
+X30	W30	链接指针（LR）
+34
+卜寄存器使用约定
+•	调用者保存的寄存器包括X9~X15
+–调用者在调用前按需（仅考虑自己是否需要）进行保存
+•	调用者在被调用者返回后恢复它们的值
+–被调用者可以随意使用
+•	调用者视角：这些寄存器在函数调用之后的值可能发生改变
+35
+卜寄存器使用约定
+•	被调用者保存的寄存器包括X19~X28
+–被调用者在使用前进行保存
+–被调用者在返回前进行恢复
+–调用者视角：这些寄存器的值在函数调用前后不会改变
+36
+卜实例：保存寄存器
+	int square(int n) return n * n; int cube(int n) return n * square(n);	
+		9
+		10
+cube作为被调用者（比如main		11
+函数调用cube），在使用x19前		12
+需	要在栈上保存它	13
+square:
+mul w% w0, w0 ret
+cube:
+stp	x29,	x30,	[sp,	-3二]!
+mov	x29：	sd
+'str	xl9,	[sp,	16]
+.mov wl9 ,	w®	.
+I r pt 1 u d d e b m I I r
+u i—i p 6 s
+9 1 [ 1
+w ，，
+P0
+，s 3 e 0 [ X r w
+u ‘9 9 qe 1 2 s w X X
+2
+3
+问1：若使用调用者保存的寄存器（如x9），是否能够避免保存？
+问2：x19（w19）是用来保存x0（w0）的值，为什么不直接把x0存在栈上？
+37
+卜对比：用栈保存和用x19保存x0
+优化选项Og
+优化选项O0（无优化）
+<cube>:		
+stp	x29,	x30, [sp, #-32]!
+mov	x29,	sp
+str	xl9,	[sp, #16]
+mov	wl9,	W0
+El	0 〈square〉	
+mul	W0,	w0, wl9
+Idr	xl9,	[sp, #16]
+Idp	x29,	x30, [sp], #32
+ret		
+<cube>:	
+stp	x29, x30, [sp, #-32]!
+mov	x29, sp
+str	w0, [sp, #28]
+Idr	w0, [sp7 #28]
+TF	0 <square>
+mov	wl, w0
+Idr	w0, [sp, #28]
+mul	W0, wl, W0
+Idp	x29, x30, [sp], #32
+ret	
+38
+>	再看CUBE函数
+39
+卜实例：理解cube函数汇编
+1 square:
+mul w0, w0, w0
+3	ret
+4	cube:
+5	stD x29, x30. Fsd, -321!
+int square(int n)
+{
+3	return n * n;
+4	}
+int cube(int n)
+return n * square(n)
+9	}
+6	mov
+7	str
+8	mov
+9	bl
+10	mul
+11	Idr
+12	Idp
+13	ret
+x29, sp
+xl9, [sp, 16] wl9, w0
+|—1 p 6 s 9 1 [ 1
+w ，，
+P0
+，s 3 e 0 [ X r w
+a ,, u ‘9 9 a—0 1 2 s w X X
+2
+3
+1.	开辟栈桢
+2.	保存caller栈桢的FP（x29）
+3.	保存返回地址LR（x30）
+40
+卜实例：理解cube函数汇编
+1	square:	
+2	mul	w0, w0, w0
+3	ret	
+4	cube:	
+5	stp	x29, x30, [sp, -32]!
+6	mov	x29. so
+7	str
+8	mov
+9	bl
+10	mul
+11	Idr
+12	Idp
+13	ret
+9 9 u ‘9 9
+1 1 q 0 1 2 X w s w X X
+p P0 s 0 ‘S3 [w e 0 [ X
+,16]
+lp]
+6 s
+9 1 [
+1
+w ，，
+32
+
+int square(int n)
+return n * n; }
+int cube(int n)
+return n * square(n); }
+将当前栈桢SP写入FP
+41
+卜实例：理解cube函数汇编
+int square(int n)
+return n * n; }
+int cube(int n)
+return n * square(n); }
+
+保存被调用者保存寄存器x19
+把参数n的值写入w19
+1	square:		
+2	mul	W0 ,	w0, w0
+3	ret		
+4	cube:		
+5	stp	x29,	x30, [sp, -32]!
+6	mov	x29,	sp
+7	str		「sp. 161
+8	mov	wl9,	w0
+2
+3
+|—1 p 6 s
+9 1 [ 1
+w ，，
+P0
+，s 3 e 0 [ X r w
+a,, u ‘9 9 aio 1 2 s w X X
+I r pt u d d e m 1 1 r
+9 0 12 3
+1111
+42
+实例：理解cube函数汇编
+int square(int n)
+{
+3	return n * n;
+4	}
+int cube(int n)
+return n * square(n)
+9	}
+调用square函数（结果在w0中）
+1	square:		
+2	mul	W0 ,	w0, w0
+3	ret		
+4	cube:		
+5	stp	x29,	x30, [sp, -32]!
+6	mov	x29,	sp
+7	str	X19,	[sp, 16]
+8	mov	wl9,	w0
+9	bl	square	
+2
+3
+TJ |—1 p 6 s y 1 [ 1
+w ，， P0 ，s 3 u [ X w
+, , ‘9 9 u 1 2 w X X
+I r pt u d d e m I I r
+0 12 3
+1111
+43
+卜实例：理解cube函数汇编
+int square(int n)
+{
+3	return n * n;
+4	}
+int cube(int n)
+return n * square(n)
+9	}
+1	square:		
+2	mul	w。，	w0, w0
+3	ret		
+4	cube:		
+5	stp	x29	,x30, [sp, -32]!
+6	mov	x29	,sp
+7	str	X19	,[sp, 16]
+8	mov	wl9	,w0
+9	bl	square	
+10	mul	w®,	w0, wl9
+12 3
+111
+r pt d d e L 1 r
+9 9
+1 2 X X
+P0 s 3
+L X
+2
+3
+n * square(n) n在w19中，square(n)在w0中
+44
+实例：理解cube函数汇编
+int square(int n)
+{
+3	return n * n;
+4	}
+int cube(int n)
+return n * square(n)
+9	}
+1	square:			
+2	mul	w。，	w0, w0	
+3	ret			
+4	cube:			
+5	stp	x29	,x30,	[sp, -32]!
+6	mov	x29	,sp	
+7	str	X19	,[sp,	16]
+8	mov	wl9	,w0	
+9	bl	square		
+10	mul	w®,	w0, wl9	
+11	Idr	xl9	,[sp,	16]
+12	Idp	x29	,x30,	[sp], 32
+13	ret			
+恢复被调用者保存寄存器x19
+45
+卜实例：理解cube函数汇编
+int square(int n)
+{
+3	return n * n;
+4	}
+int cube(int n)
+return n * square(n)
+9	}
+1	square
+2	mul
+3	ret
+4	cube:
+5	stp
+6	mov
+7	str
+8	mov
+9	bl
+10	mul
+11	Idr
+12	Idp
+13 ret
+w0, w0, w0
+0 p P0 3 p s 0 > s 3 xs[w^^[x ，,，,a , ♦ 9 9 9 9 u ‘9 9 2 2 11 Gio 1 2 xxxwswxx
+,[sp, -32]!
+,16]
+wl9
+,16]
+,「sdI, 32
+1.	释放栈桢，恢复SP
+2.	恢复caller栈桢的FP（x29）
+3.	恢复返回地址LR（x30）
+返回到x30中存储的返回地址
+46
+> 局部变量
+47
+函数局部变量存放在函数栈桢中
+•	为什么不直接把局部变量存储在寄存器?
+–寄存器数量有限
+–数组和结构体等复杂数据结构
+-局部变量可能需要寻址（如&a）
+48
+局部变量
+•	局部变量的分配
+–在分配栈帧时被一起分配
+•	局部变量的释放
+–在返回前释放栈帧时释放
+•	局部变量通过SP相对地址引用（例如 ldrx1, [sp, #8]）
+49
+卜实例：栈上局部变量
+long caller()
+{
+long	arg1	=	534;
+long	arg2	=	1057;
+long sum = swap_add(&arg1, &arg2);
+long	diff	=	arg1	- arg2;
+return sum * diff;
+}
+long swap_add(long *xp, long *yp)
+{
+long x	=	*xp;
+long y	=	*yp;
+*xp	= y;
+*yp	= x;
+return	x	+ y;
+}
+50
+卜栈上局部变量的例子
+caller:
+stp x29, x30, [sp, -32]!
+mov x29, sp
+caller的栈帧
+<	sp
+long caller()：
+long	arg1	=	534;
+long	arg2	=	1057;
+long sum = swap_add(&arg1, &arg2);
+long	diff	=	arg1	- arg2;
+return sum * diff;
+51
+卜栈上局部变量的例子
+caller:
+stp x29, x30, [sp, -32]!
+mov x29, sp
+mov x0, 534
+str x0, [sp, 24]
+caller的栈帧
+long caller()：
+long	arg1	=	534;
+long	arg2	=	1057;
+long sum = swap_add(&arg1, &arg2);
+long	diff	=	arg1	- arg2;
+return sum * diff;
+52
+卜栈上局部变量的例子
+caller:
+stp x29, x30, [sp, -32]!
+mov x29, sp
+mov x0, 534
+str x0, [sp, 24]
+mov x0, 1057
+str x0, [sp, 16]
+caller的栈帧
+sp
+long caller()：
+long	arg1	=	534;
+long	arg2	=	1057;
+long sum = swap_add(&arg1, &arg2);
+long	diff	=	arg1	- arg2;
+return sum * diff;
+53
+卜栈上局部变量的例子
+caller:
+stp
+mov
+mov str
+mov str add add
+x29, x30, [sp, -32]!
+x29, sp
+x0, 534
+x0, [sp, 24]
+x0, 1057
+x0, [sp, 16]
+x1, sp, 16
+x0, sp, 24
+caller的栈帧
+long caller()：
+long	arg1	=	534;
+long	arg2	=	1057;
+long sum = swap_add(&arg1, &arg2);
+long	diff	=	arg1	- arg2;
+return sum * diff;
+54
+卜栈上局部变量的例子
+caller:
+stp x29, x30, [sp, -32]!
+mov x29, sp
+mov x0, 534
+str x0, [sp, 24]
+mov x0, 1057
+str x0, [sp, 16]
+add x1, sp, 16
+add x0, sp, 24
+bl swap_add
+caller的栈帧
+long caller()：
+long	arg1	=	534;
+long	arg2	=	1057;
+long sum = swap_add(&arg1, &arg2);
+long	diff	=	arg1	- arg2;
+return sum * diff;
+55
+栈上局部变量的例子 swap_add: ldr	x3, [x0]	► ldr	x2, [x1] ^^^^^s str	x2,	[x0] str	x3,	[x1] add	x0, x3, x2 ret	caller的栈帧 +24	534 (arg1) +16	1057 (arg2) +8	X30 0	X29 	sp long swap_add(long *xp, long *yp)： long x = *xp; long y = *yp; *xp = y; *yp = x; return x + y;
+56
+小结：函数调用
+/调用被调用者：bl指令
+/返回到调用者：ret指令
+/传递数据：寄存器与栈
+/寄存器使用约定：调用者保存、被调用者保存
+/局部变量：存在函数栈桢中
+57
+卜小结：栈的全貌
+参数构造区
+参数保存区
+被保存的寄存器
+局部变量区
+58
+卜总结：用户态ISA
+内存
+通用寄存器
+CPU
+地址
+函数A栈桢
+X0	X1	X2	X3	X4	X5	X6	X7
+X8	X9	X10	X11	X12	X13	X14	X15
+X16	X17	X18	X19	X20	X21	X22	X23
+X24	X25	X26	X27	X28	X29	X30	
+0
+63
+31	30 29	28 27
+函数B栈桢
+函数C栈桢
+PC
+程序计数器
+63
+0
+SP
+栈顶地址
+…NZCV
+-Y
+条件码
+掩码、特权级、 执行状态等
+程序状态寄存器PSTATE
+数据
+指令
+程序数据
+程序代码
+程序运行 时使用的 栈
+SP
+PC
+59
+> 课程实验：
+拆炸弹
+60

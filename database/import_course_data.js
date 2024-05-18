@@ -25,7 +25,7 @@ async function importCollectionData(collectionName, filepath) {
     const data = readJSONFile(filepath);
 
     // 如果需要，在导入前清空集合
-    await db.collection(collectionName).deleteMany({});
+    //await db.collection(collectionName).deleteMany({});
 
     // 插入数据到集合
     const result = await db.collection(collectionName).insertOne(data);
@@ -38,7 +38,13 @@ async function importCollectionData(collectionName, filepath) {
 }
 
 // 使用函数批量导入每个集合的数据
-importCollectionData('Course_Inform', 'mini_dataset2\\40385\\40385@@程序设计原理与方法.json');
-importCollectionData('Course_Inform', 'mini_dataset2\\44009\\44009@@大学物理（荣誉）（1）.json');
+importCollectionData('Course_Inform', 'mini_dataset3\\40385\\40385@@程序设计原理与方法.json');
+importCollectionData('Course_Inform', 'mini_dataset3\\44009\\44009@@大学物理（荣誉）（1）.json');
+importCollectionData('Course_Inform', 'mini_dataset3\\45782\\45782@@程序设计实践.json');
+importCollectionData('Course_Inform', 'mini_dataset3\\48017\\48017@@大学物理（荣誉）（2）.json');
+importCollectionData('Course_Inform', 'mini_dataset3\\60290\\60290@@操作系统.json');
+importCollectionData('Course_Files', 'keyword_extract_result\\60290_keywords.json');
+importCollectionData('Course_Files', 'keyword_extract_result\\44009_keywords.json');
+importCollectionData('Course_Files', 'keyword_extract_result\\48017_keywords.json');
 //importCollectionData('Teacher_Inform', 'path/to/teachers.json');
 

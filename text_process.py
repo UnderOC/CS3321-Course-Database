@@ -13,7 +13,7 @@ def clean_text(text):
     return cleaned_text_1
 
 # 读取文件夹下所有.txt文件
-folder_path = '44009'
+folder_path = '48017'
 files = [f for f in os.listdir(folder_path) if f.endswith('.txt')]
 
 # 初始化分词结果的字典

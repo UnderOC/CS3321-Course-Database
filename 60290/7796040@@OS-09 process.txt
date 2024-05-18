@@ -1,0 +1,931 @@
+﻿I V I VII / / F
+IPADS
+INSTITUTE OF RARALLEL
+AND DISTRIBUTED SYSTEMS
+进程
+上海交通大学并行与分布式系统研究所 https://ipads.se.sjtu.edu.cn
+卜版权声明
+•	本内容版权归上海交通大学并行与分布式系统研究所所有
+•	使用者可以将全部或部分本内容免费用于非商业用途
+•	使用者在使用全部或部分本内容时请注明来源：
+– 内容来自：上海交通大学并行与分布式系统研究所+材料名字
+•	对于不遵守此声明或者其他违法使用本内容者，将依法保留追究权
+•	本内容的发布采用Creative Commons Attribution 4.0 License
+– 完整文本：https://creativecommons.org/licenses/by/4.0/legalcode
+2
+> 前情提要
+3
+卜场景-1：应用触发on-demand paging
+•	问：当应用调用malloc时，OS是否需要分配物理内存？
+– 应用调用malloc后，返回的虚拟地址属于某个VMA
+– 但虚拟地址对应的页表项的valid bit可能为0
+– 当第一次访问新分配的虚拟地址时，CPU会触发page fault
+•	操作系统需要做(即page-fault handler)：
+– 找到一块空闲的物理内存页←物理内存管理(页粒度)
+– 修改页表，将该物理页映射到触发page-fault的虚地址所在虚拟页
+– 恢复应用，重复执行触发page-fault的那行代码
+4
+卜 场景-2：内核运行中需要进行动态内存分配
+• 内核自身用到的数据结构
+– 为每个进程创建的process，VMA等数据结构
+– 动态性：用时分配，用完释放，类似用户态的malloc/new
+– 数据结构大小往往远小于页粒度
+– 接口：vaddr_t kmalloc(u64 size);
+void kfree(vaddr_t kva);
+5
+卜场景-3：换页（swap）
+•	换出操作：物理内存不够时
+– OS选择不常用的物理内存（不同的选择策略）
+– OS将内存中的数据写入磁盘块，并记录磁盘块与内存的关联
+– OS更新页表，将对应页表项的valid bit设置为0
+•	换入操作：当换出的页被访问时，触发page fault
+– OS判断该地址所在页被换出，找到对应的磁盘块
+– OS分配空闲的物理内存页；若没有空闲页，则再次进行换出操作
+– OS将磁盘块中的数据读入前一步分配的内存页
+– OS更新页表，将对应页表项的valid bit设置为1
+6
+复习：换页五问
+•	Q1：如何判断缺页异常是由于换页引起的?
+•	Q2:何时进行换出操作？
+•	Q3:换页机制的代价与如何缓解？
+•	Q4:如何选择换出的页？
+•	Q5:什么是反向映射？
+7
+卜颠簸现象(Thrashing Problem)
+• 直接原因
+– 过于频繁的缺页异常(物理内存总需求过大)
+•	大部分CPU 时间都被用来处理缺页异常
+– 等待缓慢的磁盘I/O 操作
+– 仅剩小部分的时间用于执行真正有意义的工作
+•	调度器造成问题加剧
+– 等待磁盘I/O导致CPU利用率下降
+– 调度器载入更多的进程以期提高CPU利用率
+– 触发更多的缺页异常、进一步降低CPU利用率、导致连锁反应
+8
+卜工作集模型（有效避免Thrashing）
+•	一个进程在时间t的工作集W（t, x）：
+– 其在时间段（t - x, t）内使用的内存页集合
+– 也被视为其在未来（下一个x时间内）会访问的页集合
+– 如果希望进程能够顺利进展，则需要将该集合保持在内存中
+•	工作集模型：All-or-nothing
+– 进程工作集要么都在内存中，要么全都换出
+– 避免thrashing，提高系统整体性能表现
+9
+卜场景-4：设备需要分配DMA内存
+•	DMA：设备绕过CPU直接访存
+– 由于绕过CPU的MMU，因此直接访问物理地址
+– 通常需要大段连续的物理内存
+•	操作系统必须有能力分配连续的物理页
+– 需要用一种高效的方式来组织和管理物理页
+• 之后的课程会进一步介绍
+10
+卜小结：内存管理涉及的关键数据结构
+虚拟内存
+地址翻译
+应用程序-1 独立内存地址空间
+应用程序-2 独立内存地址空间
+操作系统层：内存管理
+物理页结构体：实现分配、换页策略—虚拟内存区域
+硬件层：CPU将虚拟地址翻译为物理地址
+页表
+11
+> 进程
+15
+回
+顾：分时复用有限的CPU资源
+• 分时复用CPU
+–	让多个应用程序轮流使用处理器核心
+– 何时切换：操作系统决定
+• 运行时间片（例如100ms）
+– 高频切换：看起来是多个应用“同时”执行
+Core-0
+Core-1
+应用
+Core-2 Core-3
+16
+回
+顾：处理器上下文(CPU Context)
+• 操作系统为每个进程维护处理器上下文
+– 包含恢复进程执行所需要的状态
+– 思考：进程A执行到main函数任意一条指令，切换到进程B执行， 一段时间后，再切回到进程A执行
+•	为完成此过程，有哪些状态需要保存？
+– 具体包括：
+•	PC寄存器值，栈寄存器值，通用寄存器值，状态寄存器值
+17
+回
+顾：程序员视角
+内存
+通用寄存器
+CPU
+X0	X1	X2	X3	X4	X5	X6	X7
+X8	X9	X10	X11	X12	X13	X14	X15
+X16	X17	X18	X19	X20	X21	X22	X23
+X24	X25	X26	X27	X28	X29	X30	
+0
+63
+31	30 29	28 27
+PC
+…NZCV
+程序计数器
+条件码	异常掩码、特权级
+0	等执行状态
+程序状态寄存器PSTATE
+63
+0 63
+SPel0
+SPel1
+栈顶地址
+地址
+数据
+指令
+程序1栈
+程序2栈
+操作系统栈
+程序1 代码和数据
+程序2 代码和数据
+操作系统 代码和数据
+SP_EL0
+SP_EL1
+PC
+18
+> 进程的表示：PCB
+19
+卜进程：运行中的程序
+• 进程是计算机程序运行时的抽象
+– 静态部分：程序运行需要的代码和数据
+– 动态部分：程序运行期间的状态(程序计数器 堆 栈	)
+•	进程具有独立的虚拟地址空间
+– 每个进程都具有“独占全部内存”的假象
+– 内核中同样包含内核栈和内核代码、数据
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+卜如何表示进程：进程控制块（PCB）
+•	每个进程都对应一个元数据，称为“进程控制块”PCB
+– 进程控制块存储在内核态（为什么？）
+•	想一想：进程控制块里至少应该保存哪些信息？
+– 独立的虚拟地址空间
+– 独立的处理器上下文
+工// 一种简单的PCB结构实现
+2	struct process_vl {
+3	//处理器上下文
+struct context *ctx;
+5	//虚拟地址空间（包含页表基地址）
+6	struct vmspace *vmspace;
+7	//内核栈
+8	void *stack;
+9	}；
+PCB结构（第一版）
+21
+卜 内核栈与用户栈
+•	应用需要“又一个栈”（内核栈）？
+– 进程在内核中依然需要执行代码，有读写临时数据的需求
+– 进程在用户态和内核态的数据应该相互隔离，增强安全性
+– 能否使用原本的内核栈？
+取决于是否支持内核态抢占
+•	AArch64实现：两个栈指针寄存器
+– SP_EL1，SP_EL0
+– CPU根据内核态与用户态使用相应的SP
+* 本PPT中假设进程使用独立内核栈
+卜调度进程
+•	调度队列
+– 队列中每个元素是进程PCB
+•	内核调度器从调度队列中取出一个进程PCB
+– schedule()：进程切换
+– 恢复其上下文状态
+– 通过eret指令恢复其执行
+23
+> 进程的创建
+24
+回
+顾：从程序员视角如何使用进程？
+•	以shell为例：一个不断循环接收命令的程序
+– 收到命令后，如何执行？-> 创建一个进程，委派给它
+• 为什么不能让shell进程自己执行？
+while (true) {
+char *buffer = read_from_user();
+if (strcmp(buffer, “/bin/ls”)	== 0)	{
+int id = process_create(“/bin/ls”); process_waitpid(id);
+}
+else if …
+}
+25
+卜如何实现进程的创建？
+回
+进程包含哪些内容？
+– 用户视角：代码、数据、堆栈
+– 内核视角：PCB、虚拟地址空间、上下文、内核栈
+– 创建进程就是创建及初始化以上内容的过程
+26
+卜进程创建的伪代码实现
+1	. PCB相关内容初始化
+2	.可执行文件加载
+3	.准备运行环境
+4	.处理器上下文初始化
+1	1 nt process_create(char *path, char *argv[], char t *envp[])
+2	{
+3	〃创建一个新的PCB,用于管理新进程
+struct process *new_proc 二 alloc_process();
+5	//虚拟内存初始化：初始化虚拟地址空间友页表基地址
+i ni t_vmspace(new_proc->vmspace);
+new_proc->vmspace->pgtbl = alloc_page();
+9	//内核栈初始化
+i nit_kern_stack(new_proc->stack);
+12	//加载可执行文件并映射到虚拟地址空间
+struct file *file 二 load-elf.file(path);
+14	for (struct seg loadable_seg : file->segs) vmspace_map(new_proc~>vmspace, loadable_seg);
+16
+17	//准备运行环境：创建并映射用户才
+void *stack = alloc_stack(STACKSIZE);
+vmspace_map(new_proc->vmspace, stack);
+20
+21	//准备运行环境：将参数和环境变量放到栈上
+prepare_env(stack, argv, envp);
+23	//上下文初始化
+24	1ni t_process_ctx(new_proc->ctx);
+25	//
+26	}
+卜进程创建(一)：PCB相关初始化
+•	PCB及其包含的内容都需要创建及初始化
+– 分配PCB本身的数据结构
+– 初始化PCB：虚拟内存
+•	创建及初始化vmspace数据结构
+•	分配一个物理页，作为顶级页表
+– 内核栈：分配物理页，作为进程内核栈
+– 【思考】处理器上下文初始化？ vmspace 1	>	顶级页表 PCB	-►[	stack	»	内核栈 ctx	>	？	上下文在之后(应用运行前)才会初始化 //创建一个新的PCB.用于管理新进程 struct process *new_proc = alloc_process() //虚拟由存初始化：初始化虚拟地址空间友页表基地庇 i nit_vmspace(new_proc->vmspace); new_proc->vmspace->pgtbl = alloc_page(); //内核栈初始化 i nit_kern_stack(new_proc->stack);	28
+卜进程创建（二）：可执行文件加载
+• 可执行文件通常有固定的存储格式
+〃加裁可执行文代并映射到虚拟地址空闫
+struct file 肝功？二 load_elf file(口ath);
+for (struct seg[loadab 「seg[: fite->segs) vmspace_map(new_proc-l>vmspace, loadable_seg)
+• 以ELF（Executable and Linkable Format）为例
+– 从程序头部表可以获取需要的段所在位置
+– 通常只有代码段和数据段需要被加载（loadable）
+– 加载即从ELF文件中映射到虚拟地址空间的过程
+29
+卜进程创建（三）：准备运行环境
+• 在返回用户态运行前，还需为进程准备运行所需的环境
+– 分配用户栈（分配物理内存并映射到虚拟地址空间）
+– 准备程序运行时的环境
+•	回顾main函数：int main(int argc, char* argv[], char *envp[])
+PCB
+stack
+ctx
+vmspace
+内核栈
+数据 代码
+• ？
+用户栈
+//准备运行环境：创建并映射用户栈
+void *stack 二 alloc_stack(STACKSIZE);
+vmspace_map(new_proc->vmspace, stack);
+//准备运行环境：将参数和环境变量放到枝上 prepare env(stack, argv, envp);
+30
+卜进程创建（四）：处理器上下文初始化
+• 为什么直到最后才初始化处理器上下文？
+– 其包含的内容直到前序操作完成才确定
+•	SP：用户栈分配后才确定地址
+•	PC（保存在ELR_EL1）：加载ELF后才知道入口所在地址
+– 通用寄存器初始值可直接赋为0问：处理器状态保存寄存器SPSR _EL1呢？
+31
+> 进程的退出与等待
+32
+回
+顾：从程序员视角如何使用进程？
+以shell为例：一个不
+循环接收命令的程序
+– 当ls执行结束后，进程也就失去了存在的意义
+• 需要一个系统调用使进程显式退出
+while (true) {
+char *buffer = read_from_user();
+if (strcmp(buffer, “/bin/ls”) == 0)	{
+int id = process_create(“/bin/ls”)； process_waitpid(id);
+}
+else if …
+int main (…){
+// ls的逻辑
+• • •
+process_exit(0);
+}
+}
+33
+回
+顾：从程序员视角如何使用进程？
+•	疑问：main函数有时并不调用exit？
+– 使用return更为常见
+•	此时可由libc的代码调用process_exit，退出进程
+卜进程退出的实现（第一版）
+•	销毁PCB及其中保存的所有内容
+1	void process_exit_vl(void)
+2	{
+3	//销毁上下文结构
+destroy_ctx(curr_proc->ctx);
+5	//销毁百核栈 -
+destroy_kern_stack(curr_proc->stack)
+7	//销毁鹿拟地亚空间
+destroy_vmspace(curr_proc->vmspace);
+9	//销毁PCB
+destroy_process(cu rr_proc);
+11	"告知口核选择下个需要展行的进程
+schedule();
+13 }
+卜进程退出的实现（第一版）
+•	销毁PCB及其中保存的所有内容
+•	内核选择其他进程执行
+void process_exit_vl(void)
+//销毁上下文结构
+destroy_ctx(curr_proc->ctx);
+//销毁百核栈 -
+destroy_kern_stack(curr_proc->stack);
+//销毁鹿拟地亚空间 -
+destroy_vmspace(curr_proc->vmspace);
+"销毁PCB
+destroy_process(cu rr_proc);
+//告知内核新择下个需要展行的进程
+schedule();
+13
+}
+卜进程退出的实现（第一版）的问题
+•	问题1：内核栈应该何时销毁？
+– 思路：不能在进程退出的系统调用中销毁正在使用的内核栈
+问题2：父进程如何知道子进程是否运行结束？
+– 思路：提供系统调用
+1	void process_exit_vl(void)
+2	{
+3	//销毁上下文结构
+4	destroy_ctx(curr_proc->ctx);
+5	1//销毁内核栈
+destroy_kern_stack(curr_proc->stack)
+7	//销毁虚拟地址空间
+destroy_vmspace(curr_proc->vmspace);
+9	〃销毁PCB
+destroy_process(cu rr_proc);
+11	"告知口核选择下个需要展行的进程
+schedule ();
+37
+回
+顾：从程序员视角如何使用进程？
+•	以shell为例：一个不断循环接收命令的程序
+– 当ls进程执行时，如何使shell等待，直到ls退出？
+•	引入新系统调用：进程等待(process_waitpid)
+while (true) {
+char *buffer = read_from_user();
+if (strcmp (buffer, ''/bin/ls") == 0)	{
+int id = process_create (''/bin/ls〃)； process_waitpid(id);
+}
+else if …
+}
+38
+回
+顾：从程序员视角如何使用进程？
+以shell为例：一个不
+循环接收命令的程序
+– 新的问题：如何使shell知道应该等待哪个进程？
+•	方法：为每个进程引入进程标识符（id）
+while (true) {
+char *buffer	= read_from_user();
+if (strcmp (buffer, ''/bin/ls〃)== 0)	{
+int id = process_create (''/bin/ls〃)； process_waitpid(id);
+}
+else if …
+PCB结构(第二版)
+1	struct process_v2 {
+2	//处理器上下支
+struct context *ctx;
+4	//虚拟地址空间(包含页表基地址)
+struct vmspace *vmspace;
+6	//内核栈
+void *stack;
+8	//进程标识符
+1	nt pid;
+1。};
+}
+39
+卜进程等待的实现（第一版）
+•	假设内核使用进程列表维护所有进程
+– 仍然调用schedule，让其他进程执行
+I
+13
+14
+15
+16
+void process_waitpid_vl(int id)
+while (TRUE) {
+bool not_exit = FALSE;
+//扫描内枝的进程列表，寻找对应进程
+for (struct process *proc : all_processes) {
+//若发现该进程还在进程列表中，说明还未退出
+1f (proc->pid == id)
+not_exit 二 TRUE; break;
+//如果没有退出，则调度下个进程执行，否则直接返回
+If (not_exit)
+schedule();
+else
+return;
+40
+第一版实现的限制
+•	信息太少了！
+– ls进程退出时的返回值，shell进程完全获取不到
+– 应该如何改进呢？
+while (true) {
+char *buffer = read_from_user();
+if (strcmp(buffer, “/bin/ls”) == 0)	{
+int id = process_create(“/bin/ls”)； process_waitpid(id);
+}
+else if …
+int main (…){
+// ls的逻辑
+• • •
+process_exit(1);
+}
+}
+41
+卜改进1：为进程添加退出状态支持
+• 分别修改PCB和process_exit的实现
+PCB: 增加退出状态
+process_exit: 退出前设置退出状态
+1 struct process_v3 {	
+2	//处理器上下文
+3	struct context *ctx;
+4	//虚拟地址空间（包含页表基地址）
+5	struct vmspace *vmspace;
+6	//内核栈
+7	void *stack;
+8	//进程标识符
+9	1 nt pi d;
+10	//退出状态
+11	1 nt exit_status;
+12	〃标记是本退出
+13	bool is_exit;
+14 }；	
+1 void process_exit_v2(1 nt status)
+2	{ 3	//销毁上下文结构	
+4	destroy_ctx(curr_proc->ctx);
+5	〃销毁百核栈
+6	destroy_kern_stack(curr_proc->stack);
+7	〃销毁鹿拟地症空间
+8	destroy_vmspace(curr_proc->vmspace);
+9	〃保存通出状态
+10	curr_proc->exit_status = status;
+11	〃乐记进程为退出乐态
+12	curr_proc->is_exit = TRUE;
+13	〃告知内核选择卞个需要执行的进程
+14 15 }	schedule ();
+卜改进2：修改process_waitpid
+• 如果进程已设置为退出，则记录其退出状态并回收
+将回收操作由exit移到了waitpid
+1	void process_wa-itpid_v2(int id, int *status)^
+2	{
+3	while (TRUE) {
+4	bool not_exist = TRUE;
+5	//扫描内枝维护的进程列表，寻找对应进程
+for (struct process *proc : all_precesses) {
+19
+20
+22
+23
+24
+25
+26
+1f (proc->pid == id) {
+//标记已找到对应进程，并检查其是否已经退出 not_exist = FALSE;
+//若发现该进程已经退出，记录其退出状态
+★status = proc->exit_status;
+//回收进程的PCB并返而 destroy process(proc);
+} else {
+//如果没有退出，则调度下个进程执行 schedule();
+//如果列表中不存在该进程，则直接返回
+1f (not_exi st)
+return;
+43
+卜还有什么可以改进的地方呢？
+• 考虑两个用户的场景（小明和小红）
+– 如果小红想偷看小明进程退出的状态，应该怎么做?
+• 暴力枚举可能的id，
+对它们都调用process_waitpid
+小明的进程（不可见）
+小红的程序
+44
+卜还有什么可以改进的地方呢？
+•	考虑两个用户的场景（小明和小红）
+– 如果小红想偷看小明进程退出的状态，应该怎么做?
+•	暴力枚举可能的id，对它们都调用process_waitpid
+小明的进程（不可见）	小红的程序
+45
+改进：限制进程等待的范
+围
+•	目标：只有创建某进程的程序才能监控它
+– 程序属于小明，所以小红的程序不能监控
+•	实现：引入父（创建者）子（被创建者）进程概念
+•	进程之间的创建关系构建了一棵进程树
+– 第一个进程（树根）通常由内核主动创建
+46
+卜改进后的实现
+• 分别修改PCB和process_waitpid实现
+PCB:维护子进程列表
+waitpid:扫描子进程列表而不是所有进程
+13
+14
+15
+16
+struct process_v4 {
+"处理器上下文
+struct context *ctx;
+//虚拟地址空间(包含页表基地址) struct vmspace *vmspace;
+//内核栈
+void *stack;
+//进程标识符
+int pid;
+//退出决态
+int exit_status;
+//标记是否退出
+一bool ~is_ex~it：	一
+//子进程列表
+,pcb—Ust "children：
+13
+14
+15
+16
+18
+19
+20
+21
+23
+24
+25
+26
+27
+28
+29
+void process_wa-itpid_v3(int id, int *status)
+//如果没有子进程，直接返回
+if (!curr_proc->children) return;
+while (TRUE) {
+heel nnt px*iv十 =
+I //扫描子进程列表，寻找
+tor (struct process *proc : curr_proc->chiIdren) if (proc->pid == id) {
+//标记已找到对应进程，并检查其是否已经退出
+not_exi st 二 FALSE;
+if (proc->is_exit) {
+//若发现该进程已经退出，记录其退出状态
+★status = proc->exit_status;
+//回收进程的PCB并返回 destroy_process(proc); return;
+} else {
+//如果没有退出，则调度下个进程执行
+//如果子进程列表中不存在该进程，则立即退出
+if (not_exist) return;
+47
+一个关于process_waitpid的疑问
+• 在编程时，我们并未强制创建者调用waitpid
+– 如果shell不调用waitpid，会怎么样呢？
+• ls进程已退出，但并未销毁（有的进程活着，它已经死了）
+–称为僵尸进程(zombie)
+while (true) {
+char *buffer = read_from_user();
+if (strcmp(buffer, “/bin/ls”) == 0)	{
+int id = process_create(“/bin/ls”)；
+}
+else if ...
+• • ♦
+}
+int main (…){
+// ls的逻辑
+• ♦ ♦
+process_exit(1);
+}
+48
+卜一个关于process_waitpid的疑问
+•	在编程时，我们并未强制创建者调用waitpid
+– 如果shell不调用waitpid，会怎么样呢？
+•	解决方案：当shell进程退出后，由init进程代管并回收
+49
+> 进程的状态
+50
+卜还有什么需求呢？睡眠
+• “退出”事件太单一了，能不能等待其它的事件？
+– 常见的事件：“时间”（例如等10秒）
+–	因此可以引入进程睡眠
+• 不断查看时间，如果未到规定时间则继续等待
+1	void process_sleep(int seconds)
+2	{
+3	//获取当前时间作为睡眠起始时间
+struct *date start_time 二 get_time();
+5	while (TRUE) { struct "date cur_time = get_t-ime();
+if (t-ime_diff(cur_time, start_time) < seconds) {
+8	11如果时间未到，则调度下个进程寂行
+schedule();
+10	} else {
+11	〃时间已到，直接返回
+12	return;
+13	}
+14	}
+0	51
+回
+顾代码：进程的执行状态
+• 从之前的代码可以看出，进程处于不同的执行状态中
+– 状态有好几种，可以列出来，便于管理
+void process_waitpid_v2(n nt id, "int *status)
+while (TRUE) {
+bool not_exist = TRUE;
+//扫描内枝维护的进程列表，寻找对应进程
+for (struct process *proc : all_precesses) { if (proc->pid == id) {
+//标记已找到对应进程，并检查其是否已经退出 not_exist = FALSE;
+//若发现该进程已经退出，记录其退出状态
+★status
+proc->exi t_status;
+僵尸状态
+}
+1//回收进程的PCB并返回 destrov orocess(oroc): return;
+else {
+,已销毁状态
+19
+20
+22
+23
+24
+25
+26
+}
+} }
+1"加分汾育/忆则调度工个龈热气
+b；hedule[);]-＞即将进入不执行的状态
+//如果列表中不存在该进程，则直接返回
+}
+}
+if (not_exist) return；
+52
+卜	OS可以为进程设置不同的执行状态
+•	新生（new）：刚调用process_create
+•	就绪（ready）：随时准备执行（但暂时没有执行）
+•	运行（running）：正在执行
+•	僵尸（zombie）：退出但未回收
+•	终止（terminated）：退出且被回收
+53
+卜进程执行状态的典型应用案例：调度
+•	调度的目的：选出下一个可以执行的进程
+– 可以执行=就绪（ready）
+PCB结构：增加执行状态
+1	enum exec_status {NEW, READY, RUNNING?
+2	-	ZOMBIE, TERMINATED};
+4	struct process_v5 {
+5	//处理器上下文
+struct context *ctx;
+7	//虚拟地址空间(包含页表基地址)
+struct vmspace *vmspace;
+9	//内核栈
+io void *stack;
+11	//进程标识符
+12	int pid；
+13	//退出状态
+int exit_status;
+15	//子进程列表
+16	- Deb list *ch~iIdren:
+17	//执行兼态
+18	I enum exejstatus exejstatus;
+19	T；
+调度逻辑片段：只选择状态为READY的进程
+1	struct process* pick_next(void)
+2	{
+3	//遍历进程列表，寻找下一个可调度(处于就绪状态)的进程
+for (struct process *proc : all_processes) {
+if (proc->exec_status 二二 READY) {
+6	//上一个正在运行的进程变为就绪
+curr_proc->exec_status = READY;
+8	//近中的进程执行展态变为运行
+9	proc->exec_status = RUNNING;
+io	return proc;
+11	}
+12	}
+13	}
+54
+>	LINUX进程创建接口
+55
+卜经典创建方法：fork()
+•	语义：为调用进程创建一个一模一样的新进程
+– 调用进程为父进程，新进程为子进程
+– 接口简单，无需任何参数
+•	fork后的两个进程均为独立进程
+– 拥有不同的进程id
+– 可以并行执行，互不干扰
+– 父进程和子进程会共享部分数据结构(例如文件描述符)
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+56
+卜在程序中使用fork
+• 创建一模一样的拷贝
+–
+例子中父子进程中的x均为42
+1 #1nclude <stdio.h>			
+2	#include <sys/types		.h>
+3	^include <unistd ・ h>		
+4			
+5	int main(void)		
+6	{		
+		int x = 42; int ret = fork();	
+9		if (ret == 0) {	
+10		//子进程	
+11		printf("child:	x=96d\n",
+12		} else {	
+13		//父进程	
+14		printf("parent:	x二％d\n”，
+15			
+16		return 0;	
+17	}		
+57
+卜在程序中使用fork
+•	使用fork的返回值来分辨父/子进程
+– 0:子进程
+– 非0（子进程id）：父进程
+1	#1nclude <stdio.h>
+2	#include <sys/types•h>
+3	#include <unistd.h>
+5	int main(void)
+6	{
+7	~int x = 42:
+8	I 斤nt ]=fork。； if (ret == 0) {
+//.子进程.
+printf ("child: x二％d\n\ x);
+} else { 〃父进程 printf ("parent: x=96d\n" , x);
+return 0;
+13
+14
+15
+16
+17 }
+58
+卜在程序中使用fork
+• 独立执行
+–	Fork后父子进程顺序不确定，视调度策略而定
+1	#1nclude <stdio.h>
+2	#include <sys/types.h>
+3	ftinclude <unistd.h>
+5	int main(void)
+6	{
+int x = 42;
+int ret = fork();
+if (ret 二二 O) {
+10	//子进程
+printf ("child: x二％d\n\ x);
+12	} else {
+13	//父进程
+printf("parent: x二％d\n", x);
+15	}
+16	return 0;
+17	}
+两种可能结果
+child: x=42
+parent: x=42
+parent: x=42 child: x=42
+59
+卜小知识：fork的替代接口
+•	posix_spawn:相当于fork + exec
+– 优点：可扩展性、性能较好
+– 缺点：不如fork灵活
+•	clone: fork的“进阶版”，可以选择性地不拷贝内存
+– 优点：高度可控，可依照需求调整
+– 缺点：接口比fork复杂，选择性拷贝容易出错
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+63
+> 进程切换
+基本步骤–处理器上下文结构–切换过程
+64
+卜进程切换的基本步骤
+• 需要进出内核，共包含五个步骤
+1.	进程1进入内核态
+2.	进程1处理器上下文保存
+3.	进程上下文切换
+4.	进程2处理器上下文恢复
+5.	进程2返回用户态
+上海交通大学并行与分布式系统研究所(IPADS@SJTU)
+65
+卜处理器上下文vs. 进程上下文
+思考：操作系统如何实现curr _proc？
+• 有两个“上下文”概念，如何辨析？
+– 处理器上下文：用于保存切换时的寄存器状态(硬件)
+•	在每个PCB中均有保存
+– 进程上下文：表示目前操作系统正以哪个进程的身份运行(软件)
+•	通常使用一个指向PCB的全局指针表示(代码中的curr _proc)
+1 void process_exit_v2(1 nt status)
+;{ // -毁卜下文f	进程上下文
+4	destroy_ctx(Eurr\_procr^tx);
+5	//销毁I核栈---
+6	destroy_kern_stack(curr_proc->stack);
+7	//销毁虚拟地庇空间
+8	destroy_vmspace(curr_proc->vmspace);
+9	//保存通出状态
+10 curr_proc->exit_status 二 status;
+11	//乐记进程为退出联态
+12 curr_proc->is_exit 二 TRUE;
+13	//否知内核选择卞个需要执行的进程
+14 schedule();
+15 }	66
+处理器上下文
+回
+顾：处理器上下文的结构
+•	哪些寄存器是需要保存的？
+– 通用寄存器：所有（X0-X30）
+–	特殊寄存器：SP_EL0 （栈寄存器）
+–	系统寄存器：ELR_EL1（对应PC）, SPSR_EL1（对应PSTATE）
+1	//进程处理器上下文内部包含的内容^
+2	struct context {
+3	//通用寄存器
+4	u64 x0, xl, ..., x30；
+5	//特殊寄存器
+u64 sp_el。；
+7	//系统寄存器
+8	u64 elr_ell5 spsr_ell;
+}；	67
+卜进程的切换节点
+•	所有调用schedule()的地方都涉及进程切换
+void process_sleep(int seconds)
+1
+1	void process exit vl(void	2	
+2	{	3	//获取当前时间作为睡眠起始时间
+3	//销毁上下文结构	4	struct *date start_time 二 get_i
+4	destroy_ctx(curr_proc->	5	while (TRUE) {
+5	//销毁百核栈	6	struct "date cur_time = get_i
+6	destroy_kern_stack(curr	7	if (t-ime_diff(cur_time, stari ■ 〃.如岸艮未到,则调度下个进程 IscphedulcO ; |
+	//销毁虚拟地£空间 destroy_vmspace(curr_pr	8	
+9	//销毁PCB	10	} else {
+10	destroy_process(curr_pr	11	//时间已到，直接返回
+11	//告下个需要皮行	12	return;
+12 13	|schedule(); |	13 14	
+}
+15
+13
+14
+16
+18
+19
+20
+22
+23
+24
+25
+26
+27
+28
+29
+void process_wa_itpid_v3(-int id, int *status)
+//如果没有子进程，直接返回
+if (!curr_proc->children) return;
+while (TRUE) {
+bool not exist = TRUE;
+//扫描子进程列表，寻找对应进程
+for (struct process *proc : curr_proc->children) { if (proc->pid == id) {
+//标记已找到对应进程，并检查其是否已经退出
+not_exist = FALSE；
+if (proc->is_exit) {
+//若发现该进程已经退出，记录其退出状态
+★status = proc->exit_status;
+//回收进程的PCB并返面 destroy_process(proc); return;
+} else {
+.则调度下个进程执行
+//如果子进程列表中不存在该进程，则立即退出
+if (not_exist) return;
+68
+卜 进程切换的全过程（1）：p0进入内核态
+^^^^M
+^^^^M
+• 由硬件完成部分寄存器保存
+–	PC和PSTATE分别自动保存到ELR_EL1和SPSR_EL1
+69
+卜 进程切换的全过程（2）：p0处理器上下文保存
+• 将处理器中的寄存器值保存到处理器上下文对应的位置
+CPU
+70
+卜 进程切换的全过程(3.1)：虚拟地址空间切换
+•	设置页表相关寄存器(TTBR0_EL1)
+– 使用PCB中保存的页表基地址赋值给TTBR0_EL1
+CPU
+		xo X1 X30		po上下文|Y 「1上下文|1	pO PCB ctx vmspace] stack |
+PC | | PS1ATE |	SP_ELO				ctx
+	ELR.EL1				vmspace|
+	SPSR_EL1				stack
+	TTBR0_EL1 SP_EL1			p1 PCB	
+71
+卜	进程切换的全过程（3.2）：内核栈切换
+^^^^M
+•	设置内核中的栈寄存器SP_EL1
+– 使用PCB中保存的内核栈顶地址赋值给SP_EL1
+72
+卜	进程切换的全过程（3.3）：进程上下文切换
+•	设置cur _proc为之后要执行的进程（p1）
+– 表明之后操作系统将以p1的身份运行
+cur_proc = p1
+73
+卜	进程切换的全过程（4）：p1处理器上下文恢复
+•	从处理器上下文中加载各寄存器的值，放入对应寄存器中
+CPU
+74
+卜	进程切换的全过程（5）：p1处理器上下文恢复
+• 由硬件自动恢复部分寄存器
+– 将ELR_EL1和SPSR_EL1中的值自动保存到PC和PSTATE中
+75
+卜小结
+•	PCB：表示进程的数据结构
+– 针对不同需求，PCB的设计
+•	进程生命周期
+– 创建、等待、退出、回收
+– 进程状态
+•	进程切换
+–	处理器上下文
+–	进程上下文
+76

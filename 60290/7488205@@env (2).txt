@@ -1,0 +1,61 @@
+﻿实验环境搭建
+在开始做实验之前，需要准备好一个适当的开发、构建和运行环境，并了解如何获取、更新和提交实验 代码。
+准备开发、构建和运行环境
+在开始实验之前，需要准备一个适合自己的开发、构建和运行环境，根据同学自身（和自己的电脑）情 况不同，下面提供几种方案以供选择。
+目前我们提供的所有工具都需要在x86_64架构下运行，使用M1/M2的同学可能需要准备一个 x86_64的运行环境。
+方案一：使用助教提供的虚拟机（推荐）
+•	VMware 虚拟机（x86_64）
+O交大云盘，提取密码：os2022，大小：4.55GB，MD5：
+6c6f30518a6562080e92bbf0db05d8f5
+O你需要先安装 VMware Player、VMware Workstation 或 VMware Fusion，然后再导入虚拟 机
+虚拟机用户名为 os，密码均为 123。
+如果导入虚拟机失败，通常是因为下载没完整，请检查你下载文件的大小以及 MD5，如果不匹配，请尝 试重新下载虚拟机文件。
+方案二：自己配置环境并使用 Docker
+如果不想使用助教提供的虚拟机，可以在自己的 Linux 环境中安装所需的软件包，这里以 Ubuntu 为 例：
+•	按照 Install Docker Engine on Ubuntu 的指示安装 Docker
+•	安装 binutils-aarch64-linux-gnu 以便在 Docker 外使用 aarch64-linux-gnu-objdump 等工具
+•	安装 qemu-system-arm，用于模拟 ARM 平台，运行 ChCore
+•	安装qemu-user，用于运行炸弹程序
+方案三：自己配置所有环境
+以下是ChCore Docker构建环境的Dockerfile，可参考该Dockerfile中所安装的工具，在你的环境中安装 相应的工具，并留意后面构建和运行时使用的命令的不同。
+#	Dockerfile for ipads/chcore_builder.
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
+RUN apt-get update && \
+\
+apt-get install -y \
+cmake=3.16.* \
+cmake-curses-gui=3.16.* \ make \
+ninja-build \ cpio \ binutils \
+binutils-aarch64-linux-gnu \ binutils-riscv64-linux-gnu \ gcc=4:9.3.* \
+gcc-aarch64-linux-gnu=4:9.3.* \
+gcc-riscv64-linux-gnu=4:9.3.* \ g++=4:9.3.* \
+g++-aarch64-linux-gnu=4:9.3.* \
+g++-riscv64-linux-gnu=4:9.3.* \ grub-common \ grub-pc-bin \ xorriso && \ \
+apt-get clean && \
+rm -rf /var/lib/apt/lists/*
+获取实验代码
+拆弹实验代码发布在GitHub上，提交则直接使用canvas。
+在你的实验环境的命令行中执行：
+$ git clone https://github.com/SJTU-IPADS/OS-Course-Lab.git
+切换到拆弹实验分支
+clone完成后，进入os-course-lab目录，并执行：
+$ cd os-course-lab
+$ git checkout bomb-lab
+完成实验
+为了正确完成实验，你需要阅读仓库中的README.md和lab-instructions.pdf文件。其中，
+README.md说明了如何让助教能够正确评阅你的实验结果，lab-instructions.pdf文件则说明了实验 的具体要求。另外，我们还提供了一份tools-tutorial.pdf文档，该文档对实验中可能用到的命令行 工具做了比较详细的介绍。
+请务必仔细阅读上述文档。为了更有效率地解答同学们在实验过程中遇到的问题，如果你的问题属于上 述文档中已明确要求的步骤或介绍过的内容，可能不会被助教优先回复。
+拆弹实验中只涉及简单的git操作，通常你只需要按顺序输入本文档中提供的命令即可。但后续的ChCore 实验中，可能涉及到一些相对进阶的git操作，详见后续实验的文档。尽管在正常情况下，你也只需要按 顺序输入命令即可完成后续实验中的git操作，但也有可能遇到一些问题。为了确保你能较为高效地解决 所遇到的git问题，我们建议你花一定时间掌握git的基本概念和操作（这也是工作中极为重要的基础技 能）。你可以参考以下参考资料：
+•	Git cheat sheet：https://education.github.com/git-cheat-sheet-education.pdf
+•	《Pro Git》：https://git-scm.com/book/zh/v2
+•	learning git branching：https://learngitbranching.js.org/?locale=zh_CN
+•	《提问的智慧》：https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blo b/main/README-zh_CN.md
+提交实验结果
+要完成本次实验，你只需要修改根目录下的 ans.txt 和 student-number.txt 两个文件。在将相应内 容保存到上述两个文件后，执行下列命令来保存你的更改：
+$ git add ans.txt student-number.txt
+$ git commit -m "finish bomb-lab"
+然后，执行下列命令打包你的实验代码，并将压缩包提交到canvas作业中即可。
+$ tar --exclude=.git -zcf bomb-lab.tar.gz .
+注意：出现“tar: .: file changed as we read it”提示是正常的，并不代表创建压缩包失败。
