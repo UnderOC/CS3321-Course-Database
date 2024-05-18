@@ -2,7 +2,7 @@ const jieba = require('@node-rs/jieba');
 //先在Course_Inform集合中对于关键词进行搜索
 const searchCourseInform = async (db, keyword, modules) => {
     let query = {};
-    let fields = { course_name: 1, course_url: 1 }; // 保留基础信息
+    let fields = { _id: 0, course_name: 1, course_url: 1 }; // 保留基础信息
 
     // 这里手动规定哪一些字段需要输出
     if (modules.includes('all')) {
@@ -18,7 +18,7 @@ const searchCourseInform = async (db, keyword, modules) => {
             'assignments.assign_file.download_path': 1,
             'files.file_name': 1,
             'files.file_url': 1,
-            'video.video_description': 1,
+            'video.video_discrption': 1,
             'video.video_link1': 1,
             'video.video_link2': 1,
             'modules.module_name': 1,
@@ -28,27 +28,27 @@ const searchCourseInform = async (db, keyword, modules) => {
       } else {
         // 只搜索特定模块
         modules.forEach(mod => {
-          if (mod === 'announcements') {
+          if (mod === 'announcement') {
             fields['announcements.ann_title'] = 1;
             fields['announcements.ann_message']= 1;
           };
-          if (mod === 'assignments'){
+          if (mod === 'assignment'){
             fields['assignments.assign_title'] = 1;
             fields['assignments.assign_message'] = 1;
             fields['assignments.assign_file.file_name'] = 1;
             fields['assignments.assign_file.file_url'] =1;
             fields['assignments.assign_file.download_path'] =1;
           };
-          if (mod === 'files'){
+          if (mod === 'file'){
             fields['files.file_name'] =1;
             fields['files.file_url'] =1;
           };
           if (mod === 'video'){
-            fields['video.video_description']=1;
+            fields['video.video_discrption']=1;
             fields['video.video_link1'] = 1;
             fields['video.video_link2'] = 1;
           };
-          if (mod === 'modules'){
+          if (mod === 'module'){
             fields['modules.module_name']=1;
             fields['modules.attachments.attachment_name']=1;
             fields['modules.attachments.attachment_url']=1;
@@ -80,7 +80,7 @@ const searchCourseInform = async (db, keyword, modules) => {
                 { 'assignments.assign_file.file_id': { $regex: keyword, $options: 'i' } },
                 { 'files.file_name': { $regex: keyword, $options: 'i' } },
                 { 'files.file_id': { $regex: keyword, $options: 'i' } },
-                { 'video.video_description': { $regex: keyword, $options: 'i' } },
+                { 'video.video_discrption': { $regex: keyword, $options: 'i' } },
                 { 'modules.module_name': { $regex: keyword, $options: 'i' } },
                 { 'modules.attachments.attachment_name': { $regex: keyword, $options: 'i' } },
                 { 'modules.attachments.attachment_id': { $regex: keyword, $options: 'i' } },
@@ -155,7 +155,7 @@ const searchCourseInform = async (db, keyword, modules) => {
               input: '$video',
               as: 'vid',
               cond: {
-                $regexMatch: { input: '$$vid.video_discription', regex: keyword, options: 'i' }
+                $regexMatch: { input: '$$vid.video_discrption', regex: keyword, options: 'i' }
               }
             }
           },
@@ -326,7 +326,9 @@ const searchParsedKeywords = async (db, keyword, modules) =>{
       return results;
   }
   else{
-    return first_result;
+    let results = [];
+    results.push(first_result);
+    return results;
   }
 }
 

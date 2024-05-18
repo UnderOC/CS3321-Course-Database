@@ -1,0 +1,717 @@
+[
+  [
+    {
+      "course_name": "程序设计原理与方法",
+      "course_url": "https://oc.sjtu.edu.cn/courses/40385",
+      "video": [
+        {
+          "video_discrption": "程序设计原理与方法2022-03-09 10:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646794200-1646797500.mp4?key=1715186936-1-5d309590a03f4f1634cef5417e2b47e9",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646833544-1646836845.mp4?key=1715186936-1-6be0bc95c6e133bf38469d2b9bb16bfe"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-03-09 10:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646828577-1646831877.mp4?key=1715186941-1-81147d6e88dd9884e6a6acef9c28c8b1",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646828575-1646831874.mp4?key=1715186941-1-6674e98617fb0c8de837988ab25c918b"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-03-07 08:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646656834-1646660135.mp4?key=1715186946-1-818d46810f2107fa037761c8f3a2546d",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646656832-1646660132.mp4?key=1715186946-1-39cb2e2ef02c1d2784a5fc99902cc1e9"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-03-07 08:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646639302-1646642602.mp4?key=1715186952-1-16504961c657f90d6af3466b40618f5c",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646639300-1646642599.mp4?key=1715186952-1-127a4db7c47a821440be68fd2e92a0bd"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-03-02 10:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646230827-1646234127.mp4?key=1715186957-1-03d40a01330a109eb7375b0a309ed1b9",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646230824-1646234123.mp4?key=1715186957-1-0b0bfb6cd3e4d682bb1015a52de19b28"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-03-02 10:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646227304-1646230603.mp4?key=1715186963-1-00014e6d319707ff4f6bbc8afa57685f",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646227302-1646230601.mp4?key=1715186963-1-b32c0c11fd46feb6e251481608cbdeaa"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-28 08:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646041141-1646044440.mp4?key=1715186968-1-5377880ee96916580b7b6d37a0394c77",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646041139-1646044438.mp4?key=1715186968-1-c8821939b0b87752bfd859f780cada24"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-28 08:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1646018289-1646021588.mp4?key=1715186974-1-036092bcdb79997bc51a71ecde065374",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1646018287-1646021587.mp4?key=1715186974-1-98df3d1dda1b355d4aaa1840e318baef"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-23 10:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1645625267-1645628568.mp4?key=1715186979-1-c6042a99560866e75d344a50f810efe0",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1645625265-1645628567.mp4?key=1715186979-1-71f1541aa43bb77dceae56d97efc5622"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-23 10:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1645620327-1645623628.mp4?key=1715186985-1-12966539ba419a954862c7702ef125c0",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1645620324-1645623623.mp4?key=1715186985-1-301b29551794436c404b0f1230105a80"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-21 08:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1645429260-1645432559.mp4?key=1715186990-1-99e9215a6604c92d051e678251bcd803",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1645429258-1645432558.mp4?key=1715186990-1-e2ea31d67999c5e689a149306fd92d10"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-21 08:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1645418300-1645421601.mp4?key=1715186996-1-7e119330816514818bb3034569638b5b",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1645401573-1645404600.mp4?key=1715186996-1-6cf9acf4d222b3f0650305d6d35dc4d9"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-16 10:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1645017542-1645020843.mp4?key=1715187001-1-d5d6b5e239829e277e964700b88180fe",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1645017540-1645020841.mp4?key=1715187001-1-460ad6f06a8960e25e195beba0c3dd54"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-16 10:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1645006814-1645010115.mp4?key=1715187007-1-7aa0f7500110898fcafa938470837d0f",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1645006812-1645010112.mp4?key=1715187007-1-f13cd3516f90a9df6dbe7ab85a6e519a"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-14 08:55:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1644834673-1644837972.mp4?key=1715187012-1-d599e2c979f9a2de3c9ca6270ee16074",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1644834671-1644837971.mp4?key=1715187012-1-7ef340eb30e88f960950169b8d47f05d"
+        },
+        {
+          "video_discrption": "程序设计原理与方法2022-02-14 08:00:00",
+          "video_link1": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320000600/0_1644829719-1644833020.mp4?key=1715187017-1-68dcad440eb10cb9a301ea12f6e48bcf",
+          "video_link2": "https://live.sjtu.edu.cn/vod/31011200112000000000/31011200111320004373/0_1644829717-1644833017.mp4?key=1715187017-1-124fc9c4f4f3cf69c7fb66c5112582f4"
+        }
+      ],
+      "files": [
+        {
+          "file_name": "第9章 模块化开发.ppt",
+          "file_url": "https://oc.sjtu.edu.cn/files/3955995/download?download_frd=1"
+        },
+        {
+          "file_name": "摄像头.png",
+          "file_url": "https://oc.sjtu.edu.cn/files/4480861/download?download_frd=1"
+        },
+        {
+          "file_name": "微信图片_20220211142512.jpg",
+          "file_url": "https://oc.sjtu.edu.cn/files/3834273/download?download_frd=1"
+        },
+        {
+          "file_name": "责任助教名单.xlsx",
+          "file_url": "https://oc.sjtu.edu.cn/files/3836025/download?download_frd=1"
+        },
+        {
+          "file_name": "作业1:2答疑.mp4",
+          "file_url": "https://oc.sjtu.edu.cn/files/4102522/download?download_frd=1"
+        },
+        {
+          "file_name": "作业3答疑.wemtv",
+          "file_url": "https://oc.sjtu.edu.cn/files/4459123/download?download_frd=1"
+        },
+        {
+          "file_name": "作业4答疑.mp4",
+          "file_url": "https://oc.sjtu.edu.cn/files/4661313/download?download_frd=1"
+        },
+        {
+          "file_name": "Assignment1_Supplementary_test_cases_更正.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/3947751/download?download_frd=1"
+        },
+        {
+          "file_name": "Assignment1讲解.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4101541/download?download_frd=1"
+        },
+        {
+          "file_name": "Assignment2_supplementary_testcases.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4084673/download?download_frd=1"
+        },
+        {
+          "file_name": "Assignment2讲解.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4311486/download?download_frd=1"
+        },
+        {
+          "file_name": "assignment3.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4168110/download?download_frd=1"
+        },
+        {
+          "file_name": "baretail.exe",
+          "file_url": "https://oc.sjtu.edu.cn/files/4276593/download?download_frd=1"
+        },
+        {
+          "file_name": "codeblocks-20.03mingw-setup.exe",
+          "file_url": "https://oc.sjtu.edu.cn/files/3880764/download?download_frd=1"
+        },
+        {
+          "file_name": "CodeBlocks安装和使用.docx",
+          "file_url": "https://oc.sjtu.edu.cn/files/3834817/download?download_frd=1"
+        },
+        {
+          "file_name": "Configuration.pdf",
+          "file_url": "https://oc.sjtu.edu.cn/files/4195248/download?download_frd=1"
+        },
+        {
+          "file_name": "CS1604_Assignment1.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/3880945/download?download_frd=1"
+        },
+        {
+          "file_name": "cs1604_lib.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4221135/download?download_frd=1"
+        },
+        {
+          "file_name": "CS1604-Assignment2.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/3980768/download?download_frd=1"
+        },
+        {
+          "file_name": "CS1604lib在Mac上使用指南.pdf",
+          "file_url": "https://oc.sjtu.edu.cn/files/4240128/download?download_frd=1"
+        },
+        {
+          "file_name": "debug.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4169378/download?download_frd=1"
+        },
+        {
+          "file_name": "Debugging_Testing.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4162398/download?download_frd=1"
+        },
+        {
+          "file_name": "judger_student.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4699253/download?download_frd=1"
+        },
+        {
+          "file_name": "judger-assignment3-new.exe",
+          "file_url": "https://oc.sjtu.edu.cn/files/4296730/download?download_frd=1"
+        },
+        {
+          "file_name": "judger-assignment3-new.py",
+          "file_url": "https://oc.sjtu.edu.cn/files/4296724/download?download_frd=1"
+        },
+        {
+          "file_name": "judger-assignment3.exe",
+          "file_url": "https://oc.sjtu.edu.cn/files/4172429/download?download_frd=1"
+        },
+        {
+          "file_name": "judger使用演示&答疑.mp4",
+          "file_url": "https://oc.sjtu.edu.cn/files/3889144/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture1.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/3834897/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture1.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/3872774/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture2.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/3872779/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture2.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/3872783/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture3.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/3986326/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture3.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/3951930/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture4.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4141369/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture4.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4141373/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture5.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4515875/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture5.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4360823/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture6.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4565022/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture6.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4565026/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture7.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4763780/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture7.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4763788/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture8.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4772547/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture8.zip",
+          "file_url": "https://oc.sjtu.edu.cn/files/4772562/download?download_frd=1"
+        },
+        {
+          "file_name": "lecture9.pptx",
+          "file_url": "https://oc.sjtu.edu.cn/files/4772553/download?download_frd=1"
+        },
+        {
+          "file_name": "nat.ml",
+          "file_url": "https://oc.sjtu.edu.cn/files/4011241/download?download_frd=1"
+        },
+        {
+          "file_name": "readme.pdf",
+          "file_url": "https://oc.sjtu.edu.cn/files/3880795/download?download_frd=1"
+        }
+      ],
+      "announcements": [
+        {
+          "ann_title": "关于Assignment1/2答疑安排",
+          "ann_message": "1. 3月23日（周三）下午我们将安排有关一次集中答疑，时间从下午2:30开始，内容为第一次作业的讲解、第二次作业答疑、CodeBlocks debugger 和 judger 使用演示，和自由答疑，请有时间的同学尽量出席，腾讯会议链接如下：会议主题：CS1604 Assignment1/2 答疑\n会议时间：2022/03/23 14:30-16:00 (GMT+08:00) 中国标准时间 - 北京\n\n点击链接入会，或添加至会议列表：\nhttps://meeting.tencent.com/dm/MrsCIQm5iT97\n\n#腾讯会议：593-789-255\n会议密码：16042. 第二次作业在canvas上的提交截止日期已延后一周，请还没有开始的同学尽快开始。根据已提交作业的情况，发现部分同学实现的函数会忽略一些边角情况，所以我们补充了更多用例供大家测试。Assignment2_supplementary_testcases.zip\n下载 Assignment2_supplementary_testcases.zip提示：judger的主要目的是为了确保提交和输入输出格式符合统一测评的要求，大家可以通过使用debugger、自己编写输入输出用例的方法，检查自己的程序。 "
+        },
+        {
+          "ann_title": "关于作业提交的说明",
+          "ann_message": "针对作业之前的普遍问题，本课程提交作业和作业批改形式进行订正如下。 1. 每次作业有2次提交机会，第一次是作业发布后2周内2. 责任助教将自己负责学生的作业测试一遍，告知每个人通过比例，这个过程为1天3. 如果有人对结果不满意，可以发送出错案例的1/2，学生拿到案例，修改之后接下来1周内第二次提交，这个是最终版本4. 最终成绩以最后一次提交的版本为准5. Style point仍然占作业总分的10%，请确保按要求添加注释"
+        },
+        {
+          "ann_title": "关于Assignment1部分问题的提醒",
+          "ann_message": "1. 测试已经交上来的版本发现5、6、7题分数较低，给同学们多提供了一些测试用例，Supplementary_test_cases_更正.zip\n下载 Supplementary_test_cases_更正.zip\n(2022.3.6 15:24 由于同学们反映没有学过long long数据类型，这里测试用例进行了修正)2. 同学们务必使用judger.exe对代码测试且无误后再提交。目前提交的文件有输出无关字符（提示语句）、编译错误等低级错误，这些都是可以通过judger.exe自检出来的。3. 关于Assignment1的提交格式。请同学们把8各cpp文件按照要求命名后放到以学号命名的文件夹中，再把该文件夹压缩为zip并提交。不需要提交.o以及.exe文件。"
+        },
+        {
+          "ann_title": "课程上机安排",
+          "ann_message": "本学期的双周周三3-4节为上机时间，地点为电院4号楼313和310。注意由于房间大小不足以容纳所有学生，我们分两个教室上机。"
+        },
+        {
+          "ann_title": "课程助教信息",
+          "ann_message": "由于课程人数较多，每位同学有一位责任助教负责答疑，名单如下：责任助教名单.xlsx\n下载 责任助教名单.xlsx对于学生来说，该名单并非强制要求必须找名单上的助教提问，也欢迎咨询老师或任一助教。 "
+        },
+        {
+          "ann_title": "课程微信群",
+          "ann_message": "请同学们扫码加入如下微信群，课程重要信息将在群内发布"
+        },
+        {
+          "ann_title": "大作业最终测试数据发布",
+          "ann_message": "大作业已进行评分，提供的测试与隐藏的测试样例都在data.zip\n下载 data.zip\n文件下。评分标准：1_task1，2_task2的测试每个1.5分，3_task3的五个已经提供的样例（1.in/out - 5.in/out）每个1分，3_task3下的20个隐藏测试样例（h1.in/out - h20.in/out）每个0.5分。使用方法：将三个文件夹（1_task1,2_task2,3_task3）替换掉原来大作业文件夹下的data中的三个文件夹，并按原来方法使用judger即可"
+        },
+        {
+          "ann_title": "期中考试安排",
+          "ann_message": "期中考试将于5月7日8:00-9:40举行，具体安排如下：1. 考试将采用Canvas系统进行线上考试，请届时登录Canvas，点击“测试”条目进行测试2. 5月4日9：00开始进行一轮期中考试预演，检测线上系统是否正常工作，并测试个人电脑是否正常工作3. 期中考试为闭卷考试，考试期间禁止离开Canvas考试界面，上网或者查询本地文件均视为作弊行为4. 考试当天请提前15分钟在手机上登录腾讯会议，调整并架设好摄像头，摄像头需要对准上半身，能看到双手和屏幕, 并将个人证件放置于电脑旁，具体设置方式如下图所示：5. 考试期间如无特殊情况不允许擅自离开，考试全程录像，任何作弊行为将被判0分，并按学校章程处理。"
+        },
+        {
+          "ann_title": "最终评分安排",
+          "ann_message": "本课程最终评分流程安排如下：* 6月15日为最终提交截至日期，之后再提交的作业不计成绩* 如无特殊理由，6月5日之后提交的平时作业只能拿到70%的分数* 最终评分组成：10分平时成绩+30分平时作业+30分大作业+30分期中考试* 大作业20分基础分，10分隐藏测试分数* 16日后将反馈给同学最终分数，以及大作业的隐藏测试案例，如对最终评分有任何异议，17-18日可申诉，按实际情况评改最终成绩，18日过后不接受申述，19日在网上登记发布最终成绩。"
+        },
+        {
+          "ann_title": "本课程作业使用的编译器",
+          "ann_message": "大家注意，为了保证编译环境和测试环境的统一性，本课程将使用在Windows下的Codeblocks特定版本以及它所携带的gcc(g++)编译器。所有的程序开发和测试都以这个编译器为准，在这里下载codeblocks-20.03mingw-setup.exe\n下载 codeblocks-20.03mingw-setup.exe进行测试需要配置gcc(g++)的环境变量，操作方法见如下文件：readme.pdf\n下载 readme.pdf注意：使用Mac或其他操作系统的同学，请安装Windows虚拟机进行作业测试。"
+        },
+        {
+          "ann_title": "课程教材以及编程环境",
+          "ann_message": "本课程使用教材为：其中第一本为主要教材，第二本为辅助阅读（部分英文概念理解有困难的可做参照） 本学期实验课程使用的C++开发工具(IDE)为CodeBlocks，安装说明见如下附件：请注意，我们将使用20.03版本，下载地址在：http://www.codeblocks.org/downloads/binaries/此外，同学们也可以参照《C++程序设计实验指导》（第二版）孟桂娥编著，学习使用CodeBlocks"
+        },
+        {
+          "ann_title": "本课程作业的Style Point评分标准",
+          "ann_message": "本课程每次作业的分数有10%为代码的Style Point（也就是你的代码是否能让人看懂和维护），评分标准如下：1. 每一个函数定义之前必须要有一段注释，说明你这个函数的作用。具体包括如下几点：   a) 函数要完成一件什么任务   b) 函数的输入是什么，以及输出是什么   c) 函数可能对全局状态造成什么改变和影响，也就是说会改变哪些全局变量，如何改变，会做哪些输入输出操作（这不包括对本函数局部函数的影响，这部分应该是和函数本身实现相关的内容，应该对用户隐蔽）2. 在main函数之前，应该有一段注释，说明整个程序完成一件什么任务。 注意事项：1. 关于函数的注释，不是具体介绍你这个函数是怎么实现的。而是描述这个函数完成了一件什么任务。即是说：What does the function do? 而不是 How does it do it?2. 具体函数实现的复杂性不在Style Point评分考虑之中。即是说，只要你解释清楚每个函数的作用，它具体实现到底有多复杂并不要紧（当然整个程序必须要能通过我们的测试）。"
+        }
+      ],
+      "assignments": [
+        {
+          "assign_title": "Assignment5",
+          "assign_message": "Assignment5.rar\n下载 Assignment5.rar请务必按要求格式提交",
+          "assign_file": [
+            {
+              "file_name": "Assignment5.rar",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4556840/download?wrap=1"
+            },
+            {
+              "file_name": "下载 Assignment5.rar",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4556840/download?download_frd=1"
+            }
+          ]
+        },
+        {
+          "assign_title": "Assignment2",
+          "assign_message": "CS1604-Assignment2.zip\n下载 CS1604-Assignment2.zip详见assignment2.pdf请务必按要求格式提交截止日期3月 31 23:59",
+          "assign_file": [
+            {
+              "file_name": "CS1604-Assignment2.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/3980768/download?wrap=1"
+            },
+            {
+              "file_name": "下载 CS1604-Assignment2.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/3980768/download?download_frd=1"
+            }
+          ]
+        },
+        {
+          "assign_title": "Assignment1",
+          "assign_message": "CS1604_Assignment1.zip\n下载 CS1604_Assignment1.zip第一次作业，见readme.pdf务必按照要求格式提交 Assignment1满分10分，90%测试分，10%coding style",
+          "assign_file": [
+            {
+              "file_name": "CS1604_Assignment1.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/3880945/download?wrap=1"
+            },
+            {
+              "file_name": "下载 CS1604_Assignment1.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/3880945/download?download_frd=1"
+            }
+          ]
+        },
+        {
+          "assign_title": "课程总分",
+          "assign_message": "",
+          "assign_file": []
+        },
+        {
+          "assign_title": "Assignment4",
+          "assign_message": "assignment4.zip\n下载 assignment4.zip请务必按要求格式提交截止日期5月4日 23:59",
+          "assign_file": [
+            {
+              "file_name": "assignment4.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4358399/download?wrap=1"
+            },
+            {
+              "file_name": "下载 assignment4.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4358399/download?download_frd=1"
+            }
+          ]
+        },
+        {
+          "assign_title": "期末大作业",
+          "assign_message": "judger_student.zip\n下载 judger_student.zip请务必按要求格式提交",
+          "assign_file": [
+            {
+              "file_name": "judger_student.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4699253/download?wrap=1"
+            },
+            {
+              "file_name": "下载 judger_student.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4699253/download?download_frd=1"
+            },
+            {
+              "file_name": "judger.exe",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4692950/download?wrap=1"
+            },
+            {
+              "file_name": "下载 judger.exe",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4692950/download?download_frd=1"
+            }
+          ]
+        },
+        {
+          "assign_title": "Assignment3",
+          "assign_message": "assignment3.zip\n下载 assignment3.zipNotes:Update 4/13: A new version of the judger now allows using StanfordCppLib (libCS1604) in your programs.\nTo do so:When you finish your assignment, include the same cs1604.txt in the submitted ZIP file. This tells us to provide the library when compiling your programs.",
+          "assign_file": [
+            {
+              "file_name": "assignment3.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4168110/download?wrap=1"
+            },
+            {
+              "file_name": "下载 assignment3.zip",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4168110/download?download_frd=1"
+            },
+            {
+              "file_name": "bundled executable version of the judger",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4172429/download?wrap=1"
+            },
+            {
+              "file_name": "下载 bundled executable version of the judger",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4172429/download?download_frd=1"
+            },
+            {
+              "file_name": "script",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4296724/download?wrap=1"
+            },
+            {
+              "file_name": "下载 script",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4296724/download?download_frd=1"
+            },
+            {
+              "file_name": "executable",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4296730/download?wrap=1"
+            },
+            {
+              "file_name": "下载 executable",
+              "file_url": "https://oc.sjtu.edu.cn/courses/40385/files/4296730/download?download_frd=1"
+            }
+          ]
+        }
+      ],
+      "modules": [
+        {
+          "module_name": "绪论",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/595870",
+              "attachment_name": "lecture1.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/614286",
+              "attachment_name": "lecture1.zip"
+            }
+          ]
+        },
+        {
+          "module_name": "命令式编程基础 (C++入门)",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/614288",
+              "attachment_name": "lecture2.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/614289",
+              "attachment_name": "lecture2.zip"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/627076",
+              "attachment_name": "lecture3.zip"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/627491",
+              "attachment_name": "第9章 模块化开发.ppt"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/629322",
+              "attachment_name": "3月9号课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/634447",
+              "attachment_name": "lecture3.pptx"
+            }
+          ]
+        },
+        {
+          "module_name": "抽象数据类型",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/636760",
+              "attachment_name": "3月14号课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/636771",
+              "attachment_name": "nat.ml"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/640682",
+              "attachment_name": "3月16号课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/645927",
+              "attachment_name": "3月21号课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/649779",
+              "attachment_name": "3月23号课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/654115",
+              "attachment_name": "lecture4.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/654116",
+              "attachment_name": "lecture4.zip"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/654449",
+              "attachment_name": "3月28号课程视频"
+            }
+          ]
+        },
+        {
+          "module_name": "调试和测试",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/657075",
+              "attachment_name": "Debugging_Testing.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/658213",
+              "attachment_name": "debug.zip"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/658277",
+              "attachment_name": "3月30日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/658529",
+              "attachment_name": "作业3答疑+程序开发和Debug示例"
+            }
+          ]
+        },
+        {
+          "module_name": "多态抽象数据类型",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/661971",
+              "attachment_name": "cs1604_lib.zip"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/662349",
+              "attachment_name": "4月2号课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/665044",
+              "attachment_name": "4月6号课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/666043",
+              "attachment_name": "CS1604lib在Mac上使用指南.pdf"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/669968",
+              "attachment_name": "4月11日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/673957",
+              "attachment_name": "4月13日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/678282",
+              "attachment_name": "4月18日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/681846",
+              "attachment_name": "lecture5.zip"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/681858",
+              "attachment_name": "4月20日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/698653",
+              "attachment_name": "lecture5.pptx"
+            }
+          ]
+        },
+        {
+          "module_name": "抽象数据类型设计",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/688569",
+              "attachment_name": "4月25日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/692207",
+              "attachment_name": "4月27日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/700955",
+              "attachment_name": "5月9日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/704069",
+              "attachment_name": "lecture6.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/704071",
+              "attachment_name": "lecture6.zip"
+            }
+          ]
+        },
+        {
+          "module_name": "指针和动态资源",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/704067",
+              "attachment_name": "5月11日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/708557",
+              "attachment_name": "5月16日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/711393",
+              "attachment_name": "5月18日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/714981",
+              "attachment_name": "5月23日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/717544",
+              "attachment_name": "5月25日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/720926",
+              "attachment_name": "lecture7.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/720927",
+              "attachment_name": "lecture7.zip"
+            }
+          ]
+        },
+        {
+          "module_name": "子类型和继承",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721160",
+              "attachment_name": "5月30日课程视频"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721680",
+              "attachment_name": "lecture8.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721681",
+              "attachment_name": "lecture9.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/721684",
+              "attachment_name": "lecture8.zip"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/723267",
+              "attachment_name": "6月1号课程视频"
+            }
+          ]
+        },
+        {
+          "module_name": "工具",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/669975",
+              "attachment_name": "baretail.exe"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/671081",
+              "attachment_name": "4月11日晚答疑"
+            }
+          ]
+        },
+        {
+          "module_name": "作业讲解",
+          "attachments": [
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676350",
+              "attachment_name": "Assignment1讲解.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676462",
+              "attachment_name": "作业1讲解+作业2答疑"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676354",
+              "attachment_name": "Assignment2讲解.pptx"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676574",
+              "attachment_name": "作业2讲解"
+            },
+            {
+              "attachment_url": "https://oc.sjtu.edu.cn/courses/40385/moduleshttps://oc.sjtu.edu.cn/courses/40385/modules/items/676362",
+              "attachment_name": "作业3题目讲解和Debug说明"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+]
