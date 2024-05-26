@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 const searchParsedKeywords = require('./search_function');
+const cors = require('cors');
 
 const app = express();
 const port = 3001;
@@ -16,6 +17,7 @@ const areModulesValid = (modules) => {
   return modules.every(module => validModules.includes(module));
 };
 
+app.use(cors());
 app.use(bodyParser.json());
 
 const startServer = async () => {
@@ -31,6 +33,7 @@ const startServer = async () => {
     // 搜索接口
     app.post('/search', async (req, res) => {
       const { keyword, modules } = req.body;
+      console.log('Received request:', keyword, modules)
 
       if (!keyword || !areModulesValid(modules)) {
         return res.status(400).send({ error: 'Invalid request parameters' });
