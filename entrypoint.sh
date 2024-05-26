@@ -1,6 +1,4 @@
 
-cd ./CS3321-Course-Database/
-
 mongorestore --uri="mongodb://localhost:27017/COURSE_DB" ./back_up/COURSE_DB/
 
 cd ./course_search_api/

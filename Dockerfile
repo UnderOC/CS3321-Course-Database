@@ -15,7 +15,7 @@ EXPOSE 3001
 
 WORKDIR /workspace
 
-CMD /bin/bash ./CS3321-Course-Database/entrypoint.sh
+CMD /bin/bash ./entrypoint.sh
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
