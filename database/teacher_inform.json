@@ -1,0 +1,27 @@
+[
+    {
+        "Tname": "Dr. Smith",
+        "id": "200001",
+        "class": ["40385", "44009"]
+    },
+    {
+        "Tname": "Prof. Johnson",
+        "id": "200002",
+        "class": ["44009", "45782"]
+    },
+    {
+        "Tname": "Dr. Brown",
+        "id": "200003",
+        "class": ["45782"]
+    },
+    {
+        "Tname": "Ms. Davis",
+        "id": "200004",
+        "class": ["48017"]
+    },
+    {
+        "Tname": "Mr. Miller",
+        "id": "200005",
+        "class": ["60290"]
+    }
+]

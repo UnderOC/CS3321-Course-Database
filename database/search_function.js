@@ -1,4 +1,5 @@
 const jieba = require('@node-rs/jieba');
+
 //先在Course_Inform集合中对于关键词进行搜索
 const searchCourseInform = async (db, keyword, modules) => {
     let query = {};
