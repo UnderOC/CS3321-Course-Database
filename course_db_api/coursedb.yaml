@@ -1,0 +1,315 @@
+openapi: 3.1.0
+info:
+  title: Course Database API
+  version: 1.0.0
+  description: API for interacting with MongoDB database for course inform
+
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /search:
+    post:
+      summary: Search documents by keyword
+      description: Returns a list of documents that match the keyword
+      parameters:
+        - in: query
+          name: keyword
+          schema:
+            type: string
+          required: true
+          description: Keyword to search for
+        - in: query
+          name: modules
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+          description: List of modules to filter the search
+      responses:
+        '200':
+          description: A list of documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CourseDocument'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+        '404':
+          description: No matching records found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+
+  /insert:
+    post:
+      summary: Insert data into a course file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                className:
+                  type: string
+                moduleName:
+                  type: array
+                  items:
+                    type: string
+                data:
+                  oneOf:
+                    - type: string
+                    - $ref: '#/components/schemas/InsertData'
+                    example:
+                      data: "新的文件夹" # 或者是一个对象，例如：{ "key1": "value1", "key2": "value2" }
+                idField: # 只有当需要在对象的子对象列表中插入数据时，才需要使用id来指明对应的对象
+                  nullable: true
+                  type: object
+                  properties:
+                    file_id:
+                      type: string
+                    assign_id:
+                      type: string
+                    module_id:
+                      type: string
+              required:
+                - className
+                - moduleName
+                - data
+      responses:
+        '200':
+          description: Insert successful
+        '500':
+          description: Error
+
+  /update:
+    post:
+      summary: Update data in a course module
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                className:
+                  type: string
+                moduleName:
+                  type: array
+                  items:
+                    type: string
+                index:
+                  type: array
+                  items:
+                    type: integer #需要更新的对象在列表中的index
+                updateData:
+                  $ref: "#/components/schemas/InsertData"
+              required:
+                - className
+                - moduleName
+                - index
+                - updateData
+      responses:
+        '200':
+          description: Update successful
+        '500':
+          description: Error
+
+  /delete:
+    post:
+      summary: Delete data from a course module
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                className:
+                  type: string
+                moduleName:
+                  type: array
+                  items:
+                    type: string
+                index:
+                  type: array
+                  items:
+                    type: integer #需要删除的对象在列表中的index
+              required:
+                - className
+                - moduleName
+                - index
+      responses:
+        '200':
+          description: Delete successful
+        '500':
+          description: Error
+
+components:
+  schemas:
+    CourseDocument:
+      type: object
+      required:
+        - course_name
+        - course_url
+      properties:
+        course_name:
+          type: string
+          description: Course name
+        course_url:
+          type: string
+          description: Course URL
+        video:
+          type: array
+          items:
+            type: object
+            properties:
+              video_discrption:
+                type: string
+              video_link1:
+                type: string
+              video_link2:
+                type: string
+          description: List of video objects
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              file_name:
+                type: string
+              file_url:
+                type: string
+          description: List of file objects
+        assignments:
+          type: array
+          items:
+            type: object
+            properties:
+              assign_title:
+                type: string
+              assign_message:
+                type: string
+              assign_file:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    file_name:
+                      type: string
+                    file_url:
+                      type: string
+          description: List of assignments
+        modules:
+          type: array
+          items:
+            type: object
+            properties:
+              module_name:
+                type: string
+              attachments:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    attachment_url:
+                      type: string
+                    attachment_name:
+                      type: string
+          description: List of modules
+        announcements:
+          type: array
+          items:
+            type: object
+            properties:
+              ann_title:
+                type: string
+              ann_message:
+                type: string
+          description: List of announcements
+    InsertData:
+      type: Object
+      properties:
+        video_id:
+          type: string
+        video_discrption:
+          type: string
+        video_link1:
+          type: string
+        video_link2:
+          type: string
+        file_id:
+          type: string
+        file_name:
+          type: string
+        file_url:
+          type: string
+        file_folder:
+          type: array
+          items:
+            type: string
+        download_path:
+          type: string
+        ann_id:
+          type: string
+        ann_title:
+          type: string
+        ann_message:
+          type: string
+        assign_title:
+          type: string
+        assign_message:
+          type: string
+        assign_file:
+          type: array
+          items:
+            type: object
+            properties:
+              file_name:
+                type: string
+              file_url:
+                type: string
+        module_name:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: object
+            properties:
+              attachment_url:
+                type: string
+              attachment_name:
+                type: string
+
+
+

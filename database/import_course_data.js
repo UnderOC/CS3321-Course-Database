@@ -1,4 +1,4 @@
-const { connectToDatabase } = require('./db_connect');
+//importCourseData: 将 JSON 文件中的数据直接导入数据库
 
 // 读取 JSON 文件的辅助函数
 function readJSONFile(filepath) {
@@ -7,10 +7,8 @@ function readJSONFile(filepath) {
 }
 
 // 将 JSON 文件中的内容直接导入课程数据
-async function importCourseData(collectionName, filepath) {
+async function importCourseData(collection, filepath) {
   try {
-      const collection = await connectToDatabase('Course_Inform');
-
       // 读取 JSON 文件
       const data = readJSONFile(filepath);
 

@@ -3,10 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 // 从 JSON 文件批量导入数据到集合
-async function importDataFromFile(filePath, collectionName) {
+async function importDataFromFile(filePath, collection) {
     try {
-        const collection = await connectToDatabase(collectionName);
-
         const fileContent = fs.readFileSync(path.resolve(__dirname, filePath), 'utf-8');
         const documents = JSON.parse(fileContent);
 
@@ -18,10 +16,8 @@ async function importDataFromFile(filePath, collectionName) {
 }
 
 // 单独插入一条用户信息到集合
-async function insertUser(collectionName, userInfo) {
+async function insertUser(collection, userInfo) {
     try {
-        const collection = await connectToDatabase(collectionName);
-
         // 检查是否存在相同的id
         const existingUser = await collection.findOne({ id: userInfo.id });
         if (existingUser) {

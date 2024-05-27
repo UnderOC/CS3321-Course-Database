@@ -5,7 +5,6 @@ const uri = 'mongodb://localhost:27017';
 
 // 数据库和集合名称
 const dbName = 'COURSE_DB';
-const collectionName = 'Course_Inform';
 
 let client;
 
@@ -14,7 +13,9 @@ async function connectToDatabase() {
         client = new MongoClient(uri);
         await client.connect();
     }
-    return client.db(dbName).collection(collectionName);
+    console.log('Connected to MongoDB');
+    return client.db(dbName);
+
 }
 
 async function closeDatabaseConnection() {
@@ -22,6 +23,7 @@ async function closeDatabaseConnection() {
         await client.close();
         client = null;
     }
+    console.log('MongoDB connection closed');
 }
 
 module.exports = {

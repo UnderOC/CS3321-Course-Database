@@ -8,13 +8,14 @@ const dbName = 'COURSE_DB';
 
 let client;
 
-async function connectToDatabase(collectionName) {
+async function connectToDatabase() {
     if (!client) {
         client = new MongoClient(uri);
         await client.connect();
     }
     console.log('Connected to MongoDB');
-    return client.db(dbName).collection(collectionName);
+    return client.db(dbName);
+
 }
 
 async function closeDatabaseConnection() {
@@ -22,6 +23,7 @@ async function closeDatabaseConnection() {
         await client.close();
         client = null;
     }
+    console.log('MongoDB connection closed');
 }
 
 module.exports = {
