@@ -1,5 +1,25 @@
 const fetch = require('node-fetch');
 
+const testCreateAPI = async () => {
+  const response = await fetch('http://localhost:3001/create', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        course_name: '大学英语', 
+        course_url: 'https://oc.sjtu.edu.cn/courses/11111', 
+        course_id: '11111'
+    })
+  });
+  if (response.ok) {
+    const data = await response.json();
+    console.log('Response:', data);
+  } else {
+    console.log('Error:', response.status, response.statusText);
+  }
+};
+
 const testSearchAPI = async () => {
   const response = await fetch('http://localhost:3001/search', {
     method: 'POST',
@@ -27,10 +47,10 @@ const testInsertAPI = async () => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      className: '大学物理（荣誉）（1）',
-      moduleName: ['files', 'file_folder'],
-      data: '新的文件夹',
-      idField: { file_id: '123' }
+      className: '大学英语',
+      moduleName: ['announcements'],
+      data: { ann_id: '10001', ann_title: '新公告', ann_message: '这是一个新公告' },
+      idField: {}
     })
   });
 
@@ -51,8 +71,8 @@ const testUpdateAPI = async () => {
     body: JSON.stringify({
       className: '大学英语',
       moduleName: ['announcements'],
-      index: [0],
-      updateData: { ann_message: '更新了公告' }
+      idObject: {ann_id : '10001'}, 
+      updateFields: { ann_title: '更新公告',  ann_message: '更新了公告' }
     })
   });
 
@@ -73,7 +93,7 @@ const testDeleteAPI = async () => {
     body: JSON.stringify({
       className: '大学英语',
       moduleName: ['announcements'],
-      index: [0]
+      idObject: {ann_id : '10001'}
     })
   });
 
@@ -85,7 +105,8 @@ const testDeleteAPI = async () => {
   }
 };
 
+//testCreateAPI();
 testSearchAPI();
-testInsertAPI();
-testUpdateAPI();
-testDeleteAPI();
+//testInsertAPI();
+//testUpdateAPI();
+//testDeleteAPI();

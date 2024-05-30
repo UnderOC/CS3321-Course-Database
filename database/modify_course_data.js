@@ -1,9 +1,12 @@
 //insertCourseData: 将数据插入指定课程的对应模块，可以插入内层模块
+//updateCourseData: 将指定课程指定id的数据更新，可以更新内层模块的数据，对于一个object可以一次更新多条数据
+//deleteCourseData: 将指定课程指定id的数据删除，可以删除内层模块的数据
+//deleteManyCourseData: 将指定课程指定模块的所有数据删除，需要谨慎使用
 
 // 指定了可以修改的内层数据块
 const validModules = {
   video: [],
-  files: ['file_folder'],
+  files: [],
   announcements: [],
   assignments: ['assign_file'],
   modules: ['attachments']
@@ -175,7 +178,148 @@ async function insertCourseData(collection, className, moduleName, data, idField
   }
 }
 
-async function deleteCourseData(collection, className, moduleName, indexes) {
+async function checkFilter(collection, filter) {
+  const document = await collection.findOne(filter);
+  if (document) {
+    console.log('Document found:', JSON.stringify(document, null, 2));
+  } else {
+    console.log('No matching document found.');
+  }
+}
+
+async function deleteCourseData(collection, className, moduleName, idObject) {
+  if (!isValidModuleName(moduleName)) {
+    throw new Error('Invalid moduleName.');
+  }
+
+  try {
+    let filter = { course_name: className };
+    let update = {};
+    const idName = Object.keys(idObject)[0];
+    const idValue = idObject[idName];
+
+    if (moduleName.length === 1) {
+      const mainModule = moduleName[0];
+      filter = { course_name: className };
+      update = {
+        $pull: { [mainModule]: { [idName]: idValue } }
+      };
+    } else if (moduleName.length === 2) {
+      const mainModule = moduleName[0];
+      const subModule = moduleName[1];
+      const subIdName = Object.keys(idObject)[1];
+      const subIdValue = idObject[subIdName];
+
+      filter = { course_name: className, [`${mainModule}.${idName}`]: idValue };
+      update = {
+        $pull: { [`${mainModule}.$.${subModule}`]: { [subIdName]: subIdValue } }
+      };
+    }
+    //checkFilter(collection, filter);
+    //console.log('Filter:', JSON.stringify(filter, null, 2));
+    //console.log('Update:', JSON.stringify(update, null, 2));
+
+    const result = await collection.updateOne(filter, update);
+
+    //console.log('Result:', result);
+
+    if (result.matchedCount === 0) {
+      throw new Error('No matching document found to delete.');
+    }
+
+    if (result.modifiedCount === 0) {
+      throw new Error('Document matched but no modification was made.');
+    }
+
+    console.log('Successfully deleted object with ID:', idValue);
+
+    // Fetch the document to verify the deletion
+    //const documentAfterUpdate = await collection.findOne(filter);
+    //console.log('Document after update:', JSON.stringify(documentAfterUpdate, null, 2));
+  } catch (error) {
+    console.error('Error when deleting data:', error);
+  }
+}
+
+
+async function updateCourseData(collection, className, moduleName, idObject, updateFields) {
+  if (!isValidModuleName(moduleName)) {
+    throw new Error('Invalid moduleName.');
+  }
+
+  try {
+    let filter = { course_name: className };
+    let update = { $set: {} };
+    const idName = Object.keys(idObject)[0];
+    const idValue = idObject[idName];
+
+    if (moduleName.length === 1) {
+      const mainModule = moduleName[0];
+      filter[`${mainModule}.${idName}`] = idValue;
+
+      for (const [field, value] of Object.entries(updateFields)) {
+        update.$set[`${mainModule}.$.${field}`] = value;
+      }
+
+      const result = await collection.updateOne(filter, update);
+      if (result.matchedCount === 0) {
+        throw new Error('No matching document found to update.');
+      }
+      console.log('Successfully updated data in class file', className);
+
+    } else if (moduleName.length === 2) {
+      const mainModule = moduleName[0];
+      const subModule = moduleName[1];
+      const subIdName = Object.keys(idObject)[1];
+      const subIdValue = idObject[subIdName];
+
+      filter[`${mainModule}.${idName}`] = idValue;
+      filter[`${mainModule}.${subModule}.${subIdName}`] = subIdValue;
+      let modify_count = 0
+      const cursor = collection.find(filter);
+      for (const [field, value] of Object.entries(updateFields)) {
+        while (await cursor.hasNext()) {
+          const post = await cursor.next();
+          //console.log(post);
+          //console.log(idName);
+          //console.log(post[mainModule]);
+          post[mainModule].forEach(subpost => {
+            if (subpost[idName] === idValue){
+              //console.log(subpost);
+              subpost[subModule].forEach(subsubpost => {
+                console.log(subsubpost);
+                if (subsubpost[subIdName] === subIdValue){
+                  subsubpost[field] = value;
+                  modify_count++;
+                }
+              });
+            }
+          });
+          await collection.updateOne({ _id: post._id }, { $set: post });
+        }
+          
+          
+        }
+      if (modify_count === 0) {
+        throw new Error('No matching document found to update.');
+      }
+      console.log('Successfully updated data in class file', className);
+      
+    }
+
+    //console.log('Filter:', JSON.stringify(filter, null, 2));
+    //console.log('Update:', JSON.stringify(update, null, 2));
+    //const matchedDocs = await collection.find(filter).toArray();
+    //console.log('Matched Documents:', JSON.stringify(matchedDocs, null, 2));
+
+    //const result = await collection.updateOne(filter, update);
+    
+  } catch (error) {
+    console.error('Error when updating data:', error);
+  }
+}
+
+async function deleteCourseDatabyIndex(collection, className, moduleName, indexes) {
   if (!isValidModuleName(moduleName)) {
     throw new Error('Invalid moduleName.');
   }
@@ -218,39 +362,29 @@ async function deleteCourseData(collection, className, moduleName, indexes) {
     }
     console.log('Successfully delete data in class file', className);
   } catch (error) {
-    console.error('Error when inserting data:', error);
+    console.error('Error when deleting data:', error);
   }
 }
 
-async function updateCourseData(collection, className, moduleName, indexes, updateFields) {
+
+async function deleteManyCourseData(collection, className, moduleName) {
   if (!isValidModuleName(moduleName)) {
     throw new Error('Invalid moduleName.');
   }
 
   try {
     let filter = { course_name: className };
-    let update = { $set: {} };
-
-    if (moduleName.length === 1) {
-      const mainModule = moduleName[0];
-
-      for (const [field, value] of Object.entries(updateFields)) {
-        update.$set[`${mainModule}.${indexes[0]}.${field}`] = value;
-      }
-    } else {
-      const mainModule = moduleName[0];
-      const subModule = moduleName[1];
-
-      for (const [field, value] of Object.entries(updateFields)) {
-        update.$set[`${mainModule}.${indexes[0]}.${subModule}.${indexes[1]}.${field}`] = value;
-      }
+    let update = {};
+    const cursor = await collection.find(filter);
+    const post = await cursor.next();
+    let len_of_module = post[moduleName].length;
+    console.log(len_of_module);
+    let i = len_of_module-1;
+    while (i >= 0) {
+      console.log(i);
+      await deleteCourseDatabyIndex(collection, className, moduleName, [i]);
+      i--;
     }
-
-    const result = await collection.updateOne(filter, update);
-    if (result.matchedCount === 0) {
-      throw new Error('No matching document found to update.');
-    }
-    console.log('Successfully updated data in class file', className);
   } catch (error) {
     console.error('Error when inserting data:', error);
   }
@@ -260,5 +394,6 @@ async function updateCourseData(collection, className, moduleName, indexes, upda
 module.exports = {
   insertCourseData,
   deleteCourseData,
-  updateCourseData
+  updateCourseData,
+  deleteManyCourseData
 };

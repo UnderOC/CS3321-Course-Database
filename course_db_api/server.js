@@ -1,16 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { connectToDatabase, closeDatabaseConnection } = require('./db_connect');
-const { insertCourseData, deleteCourseData, updateCourseData } = require('./modify_course_data');
 
-//const { MongoClient } = require('mongodb');
-const searchParsedKeywords = require('./search_function');
+const { connectToDatabase, closeDatabaseConnection } = require('../database/db_connect');
+const { createCourse } = require('../database/create_course');
+const { insertCourseData, deleteCourseData, updateCourseData, deleteManyCourseData } = require('../database/modify_course_data');
+const { searchParsedKeywords } = require('../database/search_function');
+
 const cors = require('cors');
 
 const app = express();
 const port = 3001;
-//const uri = 'mongodb://localhost:27017'; // 这里改成本地mongodb的url
-//const dbName = 'COURSE_DB';
 
 // 定义有效的module值
 const validModules = ['all', 'announcement', 'video', 'assignment', 'file', 'module'];
@@ -31,6 +30,16 @@ let course_info;
   course_info = db.collection('Course_Inform');
 })();
 
+app.post('/create', async (req, res) => {
+  try {
+      const { courseInfo } = req.body;
+      await createCourse(course_info, courseName, courseUrl, courseId);
+      res.status(200).send('Insert successful');
+  } catch (error) {
+      res.status(500).send(`Error: ${error.message}`);
+  }
+});
+
 app.post('/insert', async (req, res) => {
   try {
       const { className, moduleName, data, idField } = req.body;
@@ -43,8 +52,8 @@ app.post('/insert', async (req, res) => {
 
 app.post('/update', async (req, res) => {
   try {
-      const { className, moduleName, index, updateData } = req.body;
-      await updateCourseData(course_info, className, moduleName, index, updateData);
+      const { className, moduleName, idObject, updateFields } = req.body;
+      await updateCourseData(course_info, className, moduleName, idObject, updateFields);
       res.status(200).send('Update successful');
   } catch (error) {
       res.status(500).send(`Error: ${error.message}`);
@@ -53,8 +62,18 @@ app.post('/update', async (req, res) => {
 
 app.post('/delete', async (req, res) => {
   try {
-      const { className, moduleName, index } = req.body;
-      await deleteCourseData(course_info, className, moduleName, index);
+      const { className, moduleName, idObject } = req.body;
+      await deleteCourseData(course_info, className, moduleName, idObject);
+      res.status(200).send('Delete successful');
+  } catch (error) {
+      res.status(500).send(`Error: ${error.message}`);
+  }
+});
+
+app.post('/deleteMany', async (req, res) => {
+  try {
+      const { className, moduleName } = req.body;
+      await deleteManyCourseData(course_info, className, moduleName);
       res.status(200).send('Delete successful');
   } catch (error) {
       res.status(500).send(`Error: ${error.message}`);
