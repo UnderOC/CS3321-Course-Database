@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 const testCreateAPI = async () => {
-  const response = await fetch('http://localhost:3001/create', {
+  const response = await fetch('http://localhost:3000/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -21,7 +21,7 @@ const testCreateAPI = async () => {
 };
 
 const testSearchAPI = async () => {
-  const response = await fetch('http://localhost:3001/search', {
+  const response = await fetch('http://localhost:3000/search', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ const testSearchAPI = async () => {
 };
 
 const testInsertAPI = async () => {
-  const response = await fetch('http://localhost:3001/insert', {
+  const response = await fetch('http://localhost:3000/insert', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ const testInsertAPI = async () => {
 };
 
 const testUpdateAPI = async () => {
-  const response = await fetch('http://localhost:3001/update', {
+  const response = await fetch('http://localhost:3000/update', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ const testUpdateAPI = async () => {
 };
 
 const testDeleteAPI = async () => {
-  const response = await fetch('http://localhost:3001/delete', {
+  const response = await fetch('http://localhost:3000/delete', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

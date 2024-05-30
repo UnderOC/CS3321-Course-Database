@@ -9,7 +9,7 @@ const { searchParsedKeywords } = require('../database/search_function');
 const cors = require('cors');
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 // 定义有效的module值
 const validModules = ['all', 'announcement', 'video', 'assignment', 'file', 'module'];
