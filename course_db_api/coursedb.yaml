@@ -20,16 +20,16 @@ paths:
               type: object
               properties:
                 required:
-                  - course_name
-                  - course_url
-                  - course_id
-                course_name:
+                  - courseName
+                  - courseUrl
+                  - courseId
+                courseName:
                   type: string
                   example: example_course_name
-                course_url:
+                courseUrl:
                   type: string
                   example: http://example.com/course
-                course_id:
+                courseId:
                   type: string
                   example: course123
     responses:

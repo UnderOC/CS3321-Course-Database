@@ -1,5 +1,6 @@
 // 新增课程文档, 写入课程元数据，初始化其余模块为空列表
 async function createCourse(collection, courseName, courseUrl, courseId) {
+    console.log("createCourse");
     // 检查课程是否已存在
     const existingCourse = await collection.findOne({ course_name: courseName });
     if (existingCourse) {

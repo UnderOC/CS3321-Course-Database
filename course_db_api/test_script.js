@@ -7,9 +7,9 @@ const testCreateAPI = async () => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-        course_name: '大学英语', 
-        course_url: 'https://oc.sjtu.edu.cn/courses/11111', 
-        course_id: '11111'
+        courseName: '英语', 
+        courseUrl: 'https://oc.sjtu.edu.cn/courses/11111', 
+        courseId: '111'
     })
   });
   if (response.ok) {
@@ -105,8 +105,14 @@ const testDeleteAPI = async () => {
   }
 };
 
-//testCreateAPI();
-testSearchAPI();
-//testInsertAPI();
-//testUpdateAPI();
-//testDeleteAPI();
+// 将所有测试函数调用放在一个 async 函数中
+const runTests = async () => {
+  await testCreateAPI();
+  await testSearchAPI();
+  await testInsertAPI();
+  await testUpdateAPI();
+  await testDeleteAPI();
+};
+
+// 运行测试函数
+runTests().catch(err => console.error(err));

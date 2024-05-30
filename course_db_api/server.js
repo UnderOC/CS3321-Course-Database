@@ -32,11 +32,14 @@ let course_info;
 
 app.post('/create', async (req, res) => {
   try {
-      const { courseInfo } = req.body;
-      await createCourse(course_info, courseName, courseUrl, courseId);
-      res.status(200).send('Insert successful');
+    const { courseName, courseUrl, courseId } = req.body;
+    console.log('Received request:', req.body);
+
+    await createCourse(course_info, courseName, courseUrl, courseId);
+    res.status(200).json({ message: 'Create successful' }); 
   } catch (error) {
-      res.status(500).send(`Error: ${error.message}`);
+    console.error('Error during course creation:', error);
+    res.status(500).json({ error: error.message }); 
   }
 });
 
