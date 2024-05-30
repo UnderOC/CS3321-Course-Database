@@ -19,7 +19,7 @@ const testsearchAllCourse = async () => {
     const db = client.db(dbName);
 
     // 定义测试输入
-    const keyword = '程序设计原理与方法';
+    const keyword = '热力学第一定律';
     const modules = ['all'];//可以选择的筛选条件：all，announcement，video，assignment，file，module
     console.log('关键词:', keyword);
     console.log('约束条件:', modules);

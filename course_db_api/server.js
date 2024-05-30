@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const { connectToDatabase, closeDatabaseConnection } = require('../database/db_connect');
 const { createCourse } = require('../database/create_course');
 const { insertCourseData, deleteCourseData, updateCourseData, deleteManyCourseData } = require('../database/modify_course_data');
-const { searchParsedKeywords } = require('../database/search_function');
+const searchParsedKeywords = require('../database/search_function');
 
 const cors = require('cors');
 
