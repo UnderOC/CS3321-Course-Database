@@ -11,7 +11,7 @@ RUN . /etc/os-release \
     && if [ "$(dpkg --print-architecture)" = "amd64" ]; then apt-get install -y mongodb-database-tools; fi \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 3001
+EXPOSE 3000
 
 WORKDIR /workspace
 
