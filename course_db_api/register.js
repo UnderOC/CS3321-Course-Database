@@ -1,18 +1,14 @@
-const { MongoClient } = require('mongodb');
+//registerUser: 使用用户名，密码注册，确定身份并使用id进行身份验证
 const bcrypt = require('bcrypt');
 
-async function registerUser(username, password, role, identifier) {
-    const client = new MongoClient('mongodb://localhost:27017');
-    try {
-        await client.connect();
-        const db = client.db('COURSE_DB');
+async function registerUser(db, username, password, role, identifier) {
         const usersCollection = db.collection('Users_Inform');
         const teacherCollection = db.collection('Teacher_Inform');
         const studentCollection = db.collection('Student_Inform');
 
         const userExists = await usersCollection.findOne({ user_name: username });
         if (userExists) {
-            throw new Error('User already exists');
+            throw new Error('User name already exists');
         }
 
         if (role === 'teacher') {
@@ -28,6 +24,11 @@ async function registerUser(username, password, role, identifier) {
         } else {
             throw new Error('Invalid role');
         }
+        
+        const hasRegisterd = await usersCollection.findOne({ id: identifier});
+        if (hasRegisterd){
+            throw new Error('Already registered, please login');
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
         await usersCollection.insertOne({
@@ -38,9 +39,6 @@ async function registerUser(username, password, role, identifier) {
         });
 
         console.log('User registered successfully');
-    } finally {
-        await client.close();
-    }
 }
 
 module.exports = {

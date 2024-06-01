@@ -1,11 +1,7 @@
-const { MongoClient } = require('mongodb');
+//loginUser: 使用用户名和密码进行登录，没有注册则要求先注册
 const bcrypt = require('bcrypt');
 
-async function loginUser(username, password) {
-    const client = new MongoClient('mongodb://localhost:27017');
-    try {
-        await client.connect();
-        const db = client.db('COURSE_DB');
+async function loginUser(db, username, password) {
         const usersCollection = db.collection('Users_Inform');
 
         const user = await usersCollection.findOne({ user_name: username });
@@ -20,9 +16,6 @@ async function loginUser(username, password) {
 
         console.log('Login successful');
         return user;
-    } finally {
-        await client.close();
-    }
 }
 
 module.exports = {

@@ -6,7 +6,7 @@ async function createCourse(collection, courseName, courseUrl, courseId) {
         // 检查课程是否已存在
         console.log("Checking if course exists");
         const existingCourse = await collection.findOne({ course_name: courseName });
-        console.log("Existing course:", existingCourse);
+        //console.log("Existing course:", existingCourse);
     
         if (existingCourse) {
           throw new Error(`Course with name "${courseName}" already exists in the collection.`);

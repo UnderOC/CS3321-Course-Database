@@ -2,8 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { connectToDatabase, closeDatabaseConnection } = require('./db_connect');
-const { createCourse } = require('./create_course');
-const { insertCourseData, deleteCourseData, updateCourseData, deleteManyCourseData } = require('./modify_course_data');
+const {
+  insertWithPermission,
+  deleteWithPermission,
+  updateWithPermission,
+  deleteManyWithPermission,
+  createWithPermission,
+  markFavoriteCourse,
+  removeFavoriteCourse
+} = require('./user_action');
+const { loginUser } = require('./login');
+const { registerUser } = require('./register');
+//const { createCourse } = require('./create_course');
+//const { insertCourseData, deleteCourseData, updateCourseData, deleteManyCourseData } = require('./modify_course_data');
 const searchParsedKeywords = require('./search_function');
 
 const cors = require('cors');
@@ -27,15 +38,37 @@ let course_info;
 
 (async function initializeDatabase() {
   db = await connectToDatabase();
-  course_info = db.collection('Course_Inform');
+  //course_info = db.collection('Course_Inform');
 })();
+
+app.post('/register', async (req, res) => {
+  try {
+      const { username, password, role, identifier } = req.body;
+
+      await registerUser(db, username, password, role, identifier);
+      res.status(200).send('User registered successfully');
+  } catch (error) {
+      res.status(400).send(error.message);
+  }
+});
+
+app.post('/login', async (req, res) => {
+  try {
+      const { username, password } = req.body;
+
+      const user = await loginUser(db, username, password);
+      res.status(200).send(`Login successful for user: ${user.user_name}`);
+  } catch (error) {
+      res.status(400).send(error.message);
+  }
+});
 
 app.post('/create', async (req, res) => {
   try {
-    const { courseName, courseUrl, courseId } = req.body;
-    console.log('Received request:', req.body);
+    const { userName, courseName, courseUrl, courseId } = req.body;
+    //console.log('Received request:', req.body);
 
-    await createCourse(course_info, courseName, courseUrl, courseId);
+    await createWithPermission(db, userName, courseName, courseUrl, courseId);
     res.status(200).json({ message: 'Create successful' }); 
   } catch (error) {
     console.error('Error during course creation:', error);
@@ -45,8 +78,8 @@ app.post('/create', async (req, res) => {
 
 app.post('/insert', async (req, res) => {
   try {
-      const { className, moduleName, data, idField } = req.body;
-      await insertCourseData(course_info, className, moduleName, data, idField);
+      const { userName, className, moduleName, data, idField } = req.body;
+      await insertWithPermission(db, userName, className, moduleName, data, idField);
       res.status(200).send('Insert successful');
   } catch (error) {
       res.status(500).send(`Error: ${error.message}`);
@@ -55,8 +88,8 @@ app.post('/insert', async (req, res) => {
 
 app.post('/update', async (req, res) => {
   try {
-      const { className, moduleName, idObject, updateFields } = req.body;
-      await updateCourseData(course_info, className, moduleName, idObject, updateFields);
+      const { userName, className, moduleName, idObject, updateFields } = req.body;
+      await updateWithPermission(db, userName, className, moduleName, idObject, updateFields);
       res.status(200).send('Update successful');
   } catch (error) {
       res.status(500).send(`Error: ${error.message}`);
@@ -65,8 +98,8 @@ app.post('/update', async (req, res) => {
 
 app.post('/delete', async (req, res) => {
   try {
-      const { className, moduleName, idObject } = req.body;
-      await deleteCourseData(course_info, className, moduleName, idObject);
+      const { userName, className, moduleName, idObject } = req.body;
+      await deleteWithPermission(db, userName, className, moduleName, idObject);
       res.status(200).send('Delete successful');
   } catch (error) {
       res.status(500).send(`Error: ${error.message}`);
@@ -75,15 +108,15 @@ app.post('/delete', async (req, res) => {
 
 app.post('/deleteMany', async (req, res) => {
   try {
-      const { className, moduleName } = req.body;
-      await deleteManyCourseData(course_info, className, moduleName);
+      const { userName, className, moduleName } = req.body;
+      await deleteManyWithPermission(db, userName, className, moduleName);
       res.status(200).send('Delete successful');
   } catch (error) {
       res.status(500).send(`Error: ${error.message}`);
   }
 });
 
-    // 搜索接口
+
 app.post('/search', async (req, res) => {
   const { keyword, modules } = req.body;
   console.log('Received request:', keyword, modules)
@@ -105,6 +138,29 @@ app.post('/search', async (req, res) => {
     res.status(500).send({ error: 'Internal Server Error' });
   }
 });
+
+app.post('/addFavorite', async (req, res) => {
+  try {
+      const db = await connectToDatabase();
+      const { userName, courseName } = req.body;
+      await markFavoriteCourse(db, userName, courseName);
+      res.status(200).send('Course added to favorites');
+  } catch (error) {
+      res.status(400).send(error.message);
+  }
+});
+
+app.post('/removeFavorite', async (req, res) => {
+  try {
+      const db = await connectToDatabase();
+      const { userName, courseName } = req.body;
+      await removeFavoriteCourse(db, userName, courseName);
+      res.status(200).send('Course removed from favorites');
+  } catch (error) {
+      res.status(400).send(error.message);
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);

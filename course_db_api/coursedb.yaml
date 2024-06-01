@@ -9,6 +9,61 @@ servers:
     description: Local server
 
 paths:
+  /register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - role
+                - identifier
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string # 'teacher' or 'student'
+                  example: student
+                identifier:
+                  type: string
+                  example: 12345
+      responses:
+        '200':
+          description: User registered successfully
+        '400':
+          description: Error message
+  
+  /login:
+    post:
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '400':
+          description: Error message
+    
+
   /create:
     post:
       summary: Create a new course
@@ -18,11 +73,14 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - userName
+                - courseName
+                - courseUrl
+                - courseId
               properties:
-                required:
-                  - courseName
-                  - courseUrl
-                  - courseId
+                userName: 
+                  type: string
                 courseName:
                   type: string
                   example: example_course_name
@@ -111,6 +169,8 @@ paths:
             schema:
               type: object
               properties:
+                userName:
+                  type: string
                 className:
                   type: string
                 moduleName:
@@ -130,6 +190,7 @@ paths:
                     module_id:
                       type: string
               required:
+                - userName
                 - className
                 - moduleName
                 - data
@@ -149,6 +210,8 @@ paths:
             schema:
               type: object
               properties:
+                userName:
+                  type: string
                 className:
                   type: string
                 moduleName:
@@ -162,6 +225,7 @@ paths:
                 updateFields: #改动：现在可以一次修改一个object里的多条数据
                   $ref: "#/components/schemas/InsertData"
               required:
+                - userName
                 - className
                 - moduleName
                 - index
@@ -182,6 +246,8 @@ paths:
             schema:
               type: object
               properties:
+                userName:
+                 type: string
                 className:
                   type: string
                 moduleName:
@@ -193,6 +259,7 @@ paths:
                   items:
                     $ref: "#/components/schemas/IdObject"
               required:
+                - userName
                 - className
                 - moduleName
                 - index
@@ -212,6 +279,8 @@ paths:
             schema:
               type: object
               properties:
+                userName:
+                  type: string
                 className:
                   type: string
                 moduleName:
@@ -219,14 +288,61 @@ paths:
                   items:
                     type: string
               required:
+                - userName
                 - className
                 - moduleName
       responses:
         '200':
-          description: Delete successful
+          description: Delete Many successful
         '500':
           description: Error
 
+  /addFavorite:
+    post:
+      summary: Add a course to favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userName
+                - courseName
+              properties:
+                userName:
+                  type: string
+                courseName:
+                  type: string
+      responses:
+        '200':
+          description: Course added to favorites
+        '400':
+          description: Error message
+
+  /removeFavorite:
+    post:
+      summary: Remove a course from favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userName
+                - courseName
+              properties:
+                userName:
+                  type: string
+                courseName:
+                  type: string
+      responses:
+        '200':
+          description: Course removed from favorites
+        '400':
+          description: Error message
+          
 components:
   schemas:
     CourseDocument:
