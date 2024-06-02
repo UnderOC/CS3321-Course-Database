@@ -1,4 +1,4 @@
-# Course_Stack 数据库管理系统项目文档
+# 基于MongoDB的Course_Stack 数据库管理系统项目文档
 
 
 
@@ -37,10 +37,51 @@
 
 mongdb_backend子仓库可以独立于Course_Stack主仓库进行使用
 
-1. 将仓库克隆至本地
+1. 安装MongoDB，详见[下载地址](https://www.mongodb.com/try/download/community)
+2. 安装Node.js，详见[官网](https://nodejs.org/en/download/package-manager)
+
+3. 将仓库克隆至本地
 
 ```
+git clone https://github.com/UnderOC/CS3321-Course-Database
+```
 
+4. 选择分支
+
+```
+//测试管理员权限下的接口
+git checkout main
+
+//测试用户权限下的接口
+git checkout new-feature-branch
+```
+
+5. 恢复数据库备份
+
+```
+mongorestore --uri="mongodb://localhost:27017/COURSE_DB" /back_up/COURSE_DB
+```
+
+6. 安装Node.js依赖
+
+```
+cd course_db_api
+npm install
+```
+
+7. 启动服务器并运行测试脚本
+
+```
+node server.js
+
+//in new terminal
+node test_script.js
+```
+
+8. 如果有需要，可以对修改后的数据库进行备份
+
+```
+mongodump --uri="mongodb://localhost:27017/COURSE_DB"  --out /back_up
 ```
 
 
@@ -56,7 +97,7 @@ mongdb_backend子仓库可以独立于Course_Stack主仓库进行使用
 
 COURSE_DB数据库主要包括以下几个集合（Collections）：
 
-### 1. 用户集合 (Users_Inform)
+**1. 用户集合 (Users_Inform)**
 
 - 这里定义的用户主要是数据库的使用者，分为学生和教师两类。数据库管理员拥有最高权限，暂时没有登记在用户集合内。
 
@@ -78,7 +119,7 @@ COURSE_DB数据库主要包括以下几个集合（Collections）：
   
   
 
-### 2. 教师身份验证集合 （Teacher_Inform）
+**2. 教师身份验证集合 （Teacher_Inform）**
 
 - 教师只对教授课程集合内的课程有创建和增删改权限
 
@@ -90,7 +131,7 @@ COURSE_DB数据库主要包括以下几个集合（Collections）：
     
     
 
-### 3. 学生身份验证集合 （Student_Inform）
+**3. 学生身份验证集合 （Student_Inform）**
 
 - 学生只有搜索课程资料和标记喜爱课程的权限
 
@@ -101,7 +142,7 @@ COURSE_DB数据库主要包括以下几个集合（Collections）：
     
     
 
-### 4. 课程信息集合 (Course_Inform)
+**4. 课程信息集合 (Course_Inform)**
 
 - 本项目使用的课程数据来源于[canvas网站](https://oc.sjtu.edu.cn)，课程信息可以以json文件的形式从后端批量导入数据库
 
@@ -158,8 +199,7 @@ COURSE_DB数据库主要包括以下几个集合（Collections）：
 <div style="text-align: center;">     
     <img src="image/course_file.png" alt="课程信息集合" /> 
 </div>
-
-### 5. 课程文件集合 (Course_Files)
+**5. 课程文件集合 (Course_Files)**
 
 - 为了实现类似全文检索的效果，同时尽量降低检索的复杂度和尽量减少存储数据的量，将课程文件(files列表中的文件）进行ocr识别后转换为txt文本，使用jieba分词工具对于文本进行处理，筛选出其中权重最高的至多两百个词汇，作为关键词列表记录在本集合中。
 - **字段**:
@@ -371,7 +411,7 @@ COURSE_DB数据库主要包括以下几个集合（Collections）：
 
 ### 用户操作
 
-与用户相关的操作在github仓库的另一条分支
+与用户相关的操作定义在仓库的另一条分支new-feature-branch下的course_db_api/user_action.js中。
 
 - **用户注册**: `registerUser(db, username, password, role, identifier)`
   - 用户在注册时需要创建用户名（不允许重名），设置密码（加密后在数据库中存储），指定角色并通过id在Student/Teacher集合中验证是否符合角色权限
@@ -379,71 +419,148 @@ COURSE_DB数据库主要包括以下几个集合（Collections）：
 - **用户登录**：`loginUser(db, username, password)`
   - 用户在登录时只需要输入用户名和密码
 
-- **用户操作**：除了搜索函数不需要用户权限，其余操作均在基本函数的基础上外包了一层函数，接受用户名作为额外输入，并根据用户名检查用户权限。只有当用户角色为teacher，并且在Teacher_Inform中有记录对应的className时才能执行下面的操作。
-  - 插入：`
-  - 删除：
-  - 修改：
-  - 批量删除：
-  - 创建：
+- **用户操作**：除了搜索函数不需要用户权限，其余操作均在基本函数的基础上外包了一层函数，接受用户名作为额外输入，并根据用户名和课程名使用`checkCoursePermission(db, username, courseName)`检查用户权限。只有当用户角色为teacher，并且在Teacher_Inform中有记录对应的className时才能执行下面的操作。
+  - 插入：`insertWithPermission(db, userName, className, moduleName, data, idField)`
+  - 删除：`deleteWithPermission(db, userName, className, moduleName, idObject)`
+  - 更新：`updateWithPermission(db, userName, className, moduleName, idObject, updateFields) `
+  - 批量删除：` deleteManyWithPermission(db, userName, className, moduleName)`
+  - 创建：` createWithPermission(db, userName, courseName, courseUrl, courseId)`
 
+- **额外操作**：
 
-
-
-## 前端接口
-
-### 用户接口
-
-- **注册**: `POST /api/users/register`
-  - **请求参数**: `username`, `password`, `role`
-  - **响应**: 成功消息或错误消息
-
-- **登录**: `POST /api/users/login`
-  - **请求参数**: `username`, `password`
-  - **响应**: 成功消息（包括token）或错误消息
-
-- **获取用户信息**: `GET /api/users/:id`
-  - **请求参数**: 用户ID
-  - **响应**: 用户信息
-
-### 课程接口
-
-- **创建课程**: `POST /api/courses`
-  - **请求参数**: `title`, `description`
-  - **响应**: 成功消息或错误消息
-
-- **获取所有课程**: `GET /api/courses`
-  - **响应**: 课程列表
-
-- **更新课程**: `PUT /api/courses/:id`
-  - **请求参数**: `title`, `description`
-  - **响应**: 成功消息或错误消息
-
-- **删除课程**: `DELETE /api/courses/:id`
-  - **请求参数**: 课程ID
-  - **响应**: 成功消息或错误消息
-
-### 资料接口
-
-- **添加资料**: `POST /api/materials`
-
-  - **请求参数**: `name`, `type`, `url`
-  - **响应**: 成功消息或错误消息
-
-- **获取所有资料**: `GET /api/materials`
-
-  - **响应**: 资料列表
-
-- **更新资料**: `PUT /api/materials/:id`
-
-  - **请求参数**: `name`, `type`, `url`
-  - **响应**: 成功消息或错误消息
-
-- **删除资料**: `DELETE /api/materials/:id`
-
-  - **请求参数**: 资料ID
-  - **响应**: 成功消息或错误消息
+  - 标记喜欢的课程：` markFavoriteCourse(db, userName, courseName)`
+  - 移除喜欢的课程：`removeFavoriteCourse(db, userName, courseName)`
 
   
+
+## 接口文档
+
+为了区分用户与管理员权限，在express框架下搭建了两套接口，分别位于main/course_db_api/server.js和new-feature-branch/course_db_api/server.js中，并编写了对应的coursedb.yaml文件规范接口的操作。
+
+由于两套接口实现的方式类似，下面仅展示main/course_db_api/server.js中接口的实现：
+
+**1. 创建课程接口**
+
+**URL**: `/create` 
+**请求方式**: `POST` 
+**请求参数**:
+
+- `courseName` (String): 课程名称
+- `courseUrl` (String): 课程URL
+- `courseId` (String): 课程ID
+
+**响应**:
+- 成功: `200 OK` `{ message: 'Create successful' }`
+- 失败: `500 Internal Server Error` `{ error: error.message }`
+
+
+
+**2. 插入课程数据接口**
+
+**URL**: `/insert` 
+**请求方式**: `POST` 
+**请求参数**:
+
+- `className` (String): 课程名称
+- `moduleName` (String): 模块名称
+- `data` (Object): 要插入的数据
+- `idField` (String): ID字段
+
+**响应**:
+- 成功: `200 OK` `Insert successful`
+- 失败: `500 Internal Server Error` `Error: error.message`
+
+
+
+**3. 更新课程数据接口**
+
+**URL**: `/update` 
+**请求方式**: `POST` 
+**请求参数**:
+
+- `className` (String): 课程名称
+- `moduleName` (String): 模块名称
+- `idObject` (Object): ID对象
+- `updateFields` (Object): 更新字段
+
+**响应**:
+- 成功: `200 OK` `Update successful`
+- 失败: `500 Internal Server Error` `Error: error.message`
+
+
+
+**4. 删除课程数据接口**
+
+**URL**: `/delete` 
+**请求方式**: `POST` 
+**请求参数**:
+
+- `className` (String): 课程名称
+- `moduleName` (String): 模块名称
+- `idObject` (Object): ID对象
+
+**响应**:
+- 成功: `200 OK` `Delete successful`
+- 失败: `500 Internal Server Error` `Error: error.message`
+
+
+
+**5. 批量删除课程数据接口**
+
+**URL**: `/deleteMany` 
+**请求方式**: `POST` 
+**请求参数**:
+
+- `className` (String): 课程名称
+- `moduleName` (String): 模块名称
+
+**响应**:
+- 成功: `200 OK` `Delete successful`
+- 失败: `500 Internal Server Error` `Error: error.message`
+
+
+
+**6. 搜索课程数据接口**
+
+**URL**: `/search` 
+**请求方式**: `POST` 
+**请求参数**:
+
+- `keyword` (String): 搜索关键字
+- `modules` (Array): 模块数组（有效值: 'all', 'announcement', 'video', 'assignment', 'file', 'module'）
+
+**响应**:
+- 成功: `200 OK` 返回匹配结果的数组
+- 失败: `400 Bad Request` `{ error: 'Invalid request parameters' }`
+- 无匹配结果: `404 Not Found` `{ message: 'No matching records found' }`
+- 服务器错误: `500 Internal Server Error` `{ error: 'Internal Server Error' }`
+
+
+
+**7. 初始化数据库连接**
+
+在服务器启动时，自动初始化数据库连接，并在接收到 `SIGINT` 信号（如Ctrl+C终止进程）时，自动关闭数据库连接。
+
+```js
+let db;
+let course_info;
+
+(async function initializeDatabase() {
+  db = await connectToDatabase();
+  course_info = db.collection('Course_Inform');
+})();
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
+
+process.on('SIGINT', async () => {
+  await closeDatabaseConnection();
+  process.exit(0);
+});
+```
+
+
 
 ## 后续优化
 
