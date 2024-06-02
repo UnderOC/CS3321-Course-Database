@@ -1,119 +1,85 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 
-const testCreateAPI = async () => {
-  const response = await fetch('http://localhost:3000/create', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        courseName: '英语', 
-        courseUrl: 'https://oc.sjtu.edu.cn/courses/11111', 
-        courseId: '111'
-    })
-  });
-  if (response.ok) {
-    const data = await response.json();
-    console.log('Response:', data);
-  } else {
-    console.log('Error:', response.status, response.statusText);
+const baseURL = 'http://localhost:3000';
+
+// Helper function to perform a POST request
+async function postRequest(url, data) {
+  try {
+    const response = await axios.post(`${baseURL}${url}`, data);
+    console.log(`Response from ${url}:`, response.data);
+  } catch (error) {
+    console.error(`Error from ${url}:`, error.response ? error.response.data : error.message);
   }
-};
+}
 
-const testSearchAPI = async () => {
-  const response = await fetch('http://localhost:3000/search', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      keyword: '大学物理',
-      modules: ['all']
-    })
+// Test cases
+async function runTests() {
+  // Register a user
+  await postRequest('/register', {
+    username: 'student002',
+    password: 'password123',
+    role: 'student',
+    identifier: '10003'
   });
 
-  if (response.ok) {
-    const data = await response.json();
-    console.log('Response:', data);
-  } else {
-    console.log('Error:', response.status, response.statusText);
-  }
-};
-
-const testInsertAPI = async () => {
-  const response = await fetch('http://localhost:3000/insert', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      className: '大学英语',
-      moduleName: ['announcements'],
-      data: { ann_id: '10001', ann_title: '新公告', ann_message: '这是一个新公告' },
-      idField: {}
-    })
+  // Login a user
+  await postRequest('/login', {
+    username: 'student002',
+    password: 'password123'
   });
 
-  if (response.ok) {
-    const data = await response.text();
-    console.log('Insert Response:', data);
-  } else {
-    console.log('Insert Error:', response.status, response.statusText);
-  }
-};
-
-const testUpdateAPI = async () => {
-  const response = await fetch('http://localhost:3000/update', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      className: '大学英语',
-      moduleName: ['announcements'],
-      idObject: {ann_id : '10001'}, 
-      updateFields: { ann_title: '更新公告',  ann_message: '更新了公告' }
-    })
+  // Create a course
+  await postRequest('/create', {
+    userName: 'teacher003',
+    courseName: '大学英语',
+    courseUrl: 'http://example.com',
+    courseId: '10001'
+  });
+  
+  // Insert data into a module
+  await postRequest('/insert', {
+    userName: 'teacher001',
+    className: '程序设计原理与方法',
+    moduleName: ['announcements'],
+    data: { ann_id: '10001', ann_title: '新公告', ann_message: '这是一个新公告' },
+    idField: {}
   });
 
-  if (response.ok) {
-    const data = await response.text();
-    console.log('Update Response:', data);
-  } else {
-    console.log('Update Error:', response.status, response.statusText);
-  }
-};
-
-const testDeleteAPI = async () => {
-  const response = await fetch('http://localhost:3000/delete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      className: '大学英语',
-      moduleName: ['announcements'],
-      idObject: {ann_id : '10001'}
-    })
+  // Update data in a module
+  await postRequest('/update', {
+    userName: 'teacher001',
+    className: '程序设计原理与方法',
+    moduleName: ['announcements'],
+    idObject: { ann_id: '10001' },
+    updateFields: {  ann_title: '更新公告', ann_message: '更新了公告' }
   });
 
-  if (response.ok) {
-    const data = await response.text();
-    console.log('Delete Response:', data);
-  } else {
-    console.log('Delete Error:', response.status, response.statusText);
-  }
-};
+  // Delete data from a module
+  await postRequest('/delete', {
+    userName: 'teacher001',
+    className: '程序设计原理与方法',
+    moduleName: ['announcements'],
+    idObject: { ann_id: '10001' }
+  });
 
+  // Search for a keyword
+  await postRequest('/search', {
+    keyword: '大学物理',
+    modules: ['all']
+  });
 
-// 将所有测试函数调用放在一个 async 函数中
-const runTests = async () => {
-  await testCreateAPI();
-  await testSearchAPI();
-  await testInsertAPI();
-  await testUpdateAPI();
-  await testDeleteAPI();
-};
+  // Add a favorite course
+  await postRequest('/addFavorite', {
+    userName: 'teacher001',
+    courseName: '大学英语'
+  });
 
-// 运行测试函数
-runTests().catch(err => console.error(err));
+  // Remove a favorite course
+  await postRequest('/removeFavorite', {
+    userName: 'teacher001',
+    courseName: '大学英语'
+  });
+}
+
+// Run the tests
+runTests();
